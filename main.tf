@@ -624,7 +624,7 @@ resource "azurerm_lb_probe" "https-app" {
 
 # App tier Availability Set
 resource "azurerm_availability_set" "app" {
-  name                         = "{var.app-availset}"
+  name                         = "${var.app-availset}"
   location                     = "${azurerm_resource_group.rg.location}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   platform_update_domain_count = "5"
