@@ -131,3 +131,38 @@ variable "adds-nsg" {
   description = "Network Security Group for ADDS subnet."
   default     = "adds-tier-nsg"
 }
+
+variable "web-count" {
+  description = "Number of Virtual Machines"
+  default     = 2
+}
+
+variable "webvm-nicname" {
+  description = "Naming convention for web servers."
+  default     = "vmnic-web-0${count.index + 1}"
+}
+
+variable "web-staticip" {
+  description = "Starting static IP address for web servers."
+  default     = "10.0.1.${count.index + 5}"
+}
+
+variable "vip-name" {
+  description = "Load balancer VIP name."
+  default     = "LBPublicIP"
+}
+
+variable "lb-name" {
+  description = "Front End Load Balancer name."
+  default     = "Public-LB"
+}
+
+variable "fe-ipconfig" {
+  description = "Front End IP configuration name."
+  default     = "public-LoadBalancer"
+}
+
+variable "be-ippoolname" {
+  description = "Back End Address Pool."
+  default     = "BackEndAddressPool"
+}

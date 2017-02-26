@@ -372,3 +372,100 @@ resource "azurerm_network_security_group" "mgt-nsg" {
     destination_address_prefix = "${var.mgt-cidr}"
   }
 }
+
+# Create Virtual Machines
+
+# VMs for public subnet
+
+# Public subnet nics
+resource "azurerm_network_interface" "public" {
+  count               = "${var.web-count}"
+  name                = "${var.webvm-nicname}"
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+
+  network_security_group_id = "${azurerm_network_security_group.public-nsg.id}"
+
+  ip_configuration {
+    name                                    = "ipconfig${count.index +1}"
+    subnet_id                               = "${azurerm_subnet.public.id}"
+    private_ip_address_allocation           = "Static"
+    private_ip_address                      = "${var.web-staticip}"
+    load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.public.id}"]
+  }
+}
+
+# Internet facing load load_balancer_backend_address_pools_ids
+
+# VIP address
+resource "azurerm_public_ip" "vip" {
+  name                         = "${var.vip-name}"
+  location                     = "${azurerm_resource_group.rg.location}"
+  resource_group_name          = "${azurerm_resource_group.rg.name}"
+  public_ip_address_allocation = "static"
+}
+
+# Front End Load Balancer
+resource "azurerm_lb" "public" {
+  name                = "${var.lb-name}"
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+
+  frontend_ip_configuration {
+    name                 = "${var.fe-ipconfig}"
+    public_ip_address_id = "${azurerm_public_ip.vip.id}"
+  }
+}
+
+# Back End Address Pool
+resource "azurerm_lb_backend_address_pool" "public" {
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id     = "${azurerm_lb.public.id}"
+  name                = "${var.be-ippoolname}"
+}
+
+# Load Balancer Rule
+resource "azurerm_lb_rule" "http-rule" {
+  location                       = "${azurerm_resource_group.rg.location}"
+  resource_group_name            = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id                = "${azurerm_lb.public.id}"
+  name                           = "HTTPRule"
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = 80
+  frontend_ip_configuration_name = "${var.fe-ipconfig}"
+  backend_address_pool_id        = "${azurerm_lb_backend_address_pool.public.id}"
+  probe_id                       = "${azurerm_lb_probe.http.id}"
+  depends_on                     = ["azurerm_lb_probe.http"]
+}
+
+resource "azurerm_lb_rule" "https-rule" {
+  location                       = "${azurerm_resource_group.rg.location}"
+  resource_group_name            = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id                = "${azurerm_lb.public.id}"
+  name                           = "HTTPRule"
+  protocol                       = "Tcp"
+  frontend_port                  = 443
+  backend_port                   = 443
+  frontend_ip_configuration_name = "${var.fe-ipconfig}"
+  backend_address_pool_id        = "${azurerm_lb_backend_address_pool.public.id}"
+  probe_id                       = "${azurerm_lb_probe.https.id}"
+  depends_on                     = ["azurerm_lb_probe.https"]
+}
+
+resource "azurerm_lb_probe" "http" {
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id     = "${azurerm_lb.public.id}"
+  name                = "HTTP"
+  port                = 80
+}
+
+resource "azurerm_lb_probe" "https" {
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id     = "${azurerm_lb.public.id}"
+  name                = "HTTPS"
+  port                = 443
+}
