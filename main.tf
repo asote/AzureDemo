@@ -426,7 +426,7 @@ resource "azurerm_lb_backend_address_pool" "public" {
 }
 
 # Load Balancer Rules
-resource "azurerm_lb_rule" "http-rule" {
+resource "azurerm_lb_rule" "http-rule-public" {
   location                       = "${azurerm_resource_group.rg.location}"
   resource_group_name            = "${azurerm_resource_group.rg.name}"
   loadbalancer_id                = "${azurerm_lb.public.id}"
@@ -436,11 +436,11 @@ resource "azurerm_lb_rule" "http-rule" {
   backend_port                   = 80
   frontend_ip_configuration_name = "${var.fe-ipconfig}"
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.public.id}"
-  probe_id                       = "${azurerm_lb_probe.http.id}"
-  depends_on                     = ["azurerm_lb_probe.http"]
+  probe_id                       = "${azurerm_lb_probe.http-public.id}"
+  depends_on                     = ["azurerm_lb_probe.http-public"]
 }
 
-resource "azurerm_lb_rule" "https-rule" {
+resource "azurerm_lb_rule" "https-rule-public" {
   location                       = "${azurerm_resource_group.rg.location}"
   resource_group_name            = "${azurerm_resource_group.rg.name}"
   loadbalancer_id                = "${azurerm_lb.public.id}"
@@ -450,11 +450,11 @@ resource "azurerm_lb_rule" "https-rule" {
   backend_port                   = 443
   frontend_ip_configuration_name = "${var.fe-ipconfig}"
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.public.id}"
-  probe_id                       = "${azurerm_lb_probe.https.id}"
-  depends_on                     = ["azurerm_lb_probe.https"]
+  probe_id                       = "${azurerm_lb_probe.https-public.id}"
+  depends_on                     = ["azurerm_lb_probe.https-public"]
 }
 
-resource "azurerm_lb_probe" "http" {
+resource "azurerm_lb_probe" "http-public" {
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
   loadbalancer_id     = "${azurerm_lb.public.id}"
@@ -462,7 +462,7 @@ resource "azurerm_lb_probe" "http" {
   port                = 80
 }
 
-resource "azurerm_lb_probe" "https" {
+resource "azurerm_lb_probe" "https-public" {
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
   loadbalancer_id     = "${azurerm_lb.public.id}"
