@@ -396,7 +396,7 @@ variable "mgtserver-name" {
   default     = "mgt"
 }
 
-variable "mgts-vmsize" {
+variable "mgt-vmsize" {
   description = "mgt server vm size."
   default     = "Standard_A2"
 }
