@@ -205,3 +205,18 @@ variable "datadisk-size" {
   description = "Data disk size."
   default     = "50"
 }
+
+variable "app-count" {
+  description = "Number of Virtual Machines"
+  default     = 2
+}
+
+variable "appvm-nicname" {
+  description = "Naming convention for app servers."
+  default     = "vmnic-app-"
+}
+
+variable "app-staticip" {
+  description = "Starting static IP address for app servers. First 3 octects."
+  default     = "10.0.2."
+}

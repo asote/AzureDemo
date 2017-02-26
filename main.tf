@@ -534,3 +534,22 @@ resource "azurerm_virtual_machine" "web" {
     environment = "${var.environment}"
   }
 }
+
+# VMs for App subnet
+# App subnet nics
+resource "azurerm_network_interface" "app" {
+  count               = "${var.app-count}"
+  name                = "${var.appvm-nicname}${count.index + 1}"
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+
+  network_security_group_id = "${azurerm_network_security_group.app-nsg.id}"
+
+  ip_configuration {
+    name                                    = "ipconfig${count.index +1}"
+    subnet_id                               = "${azurerm_subnet.app.id}"
+    private_ip_address_allocation           = "Static"
+    private_ip_address                      = "${var.app-staticip}${count.index + 5}"
+    load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.app.id}"]
+  }
+}
