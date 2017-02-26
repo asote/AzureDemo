@@ -240,3 +240,33 @@ variable "app-availset" {
   description = "Availability Set name for app servers."
   default     = "AppAvailSet"
 }
+
+variable "appserver-name" {
+  description = "App server naming convention."
+  default     = "app"
+}
+
+variable "app-vmsize" {
+  description = "App server vm size."
+  default     = "Standard_A2"
+}
+
+variable "appimage-publisher" {
+  description = "Image publisher."
+  default     = "MicrosoftWindowsServer"
+}
+
+variable "appimage-offer" {
+  description = "Image offer."
+  default     = "WindowsServer"
+}
+
+variable "appimage-sku" {
+  description = "Image sku."
+  default     = "2012-R2-Datacenter"
+}
+
+variable "appimage-version" {
+  description = "Image version."
+  default     = "latest"
+}
