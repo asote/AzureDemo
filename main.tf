@@ -879,3 +879,17 @@ resource "azurerm_public_ip" "PublicIP" {
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   public_ip_address_allocation = "static"
 }
+
+# Management Availability Set
+# ADDS Availability Set
+resource "azurerm_availability_set" "mgt" {
+  name                         = "${var.mgt-availset}"
+  location                     = "${azurerm_resource_group.rg.location}"
+  resource_group_name          = "${azurerm_resource_group.rg.name}"
+  platform_update_domain_count = "5"
+  platform_fault_domain_count  = "3"
+
+  tags {
+    environment = "${var.environment}"
+  }
+}
