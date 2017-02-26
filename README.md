@@ -5,8 +5,6 @@ Sample terraform configuration files to provision and deploy  VMs in Azure Resou
 
 ##Running Windows VMs for an N-tier architecture on Azure
 
-![Azure architecture](https://1.bp.blogspot.com/-vBoEHhSpjsA/WDcRKM1VylI/AAAAAAAACpE/HC9JTCvg1jIxiPLgYAgKOhjrgB-C_uWywCLcB/s640/Azure-Architecture.PNG)
-
 [More information on N-tier architecture on Azure](https://docs.microsoft.com/en-us/azure/guidance/guidance-compute-n-tier-vm)
 
 [More information on Azure Automation DSC](https://docs.microsoft.com/en-us/azure/automation/automation-dsc-getting-started)
