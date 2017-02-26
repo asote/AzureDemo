@@ -19,17 +19,17 @@ output "appservers_ip" {
 }
 
 output "dataservers_name" {
-  description = "data Servers names."
+  description = "Database Servers names."
   value       = ["${azurerm_virtual_machine.data.*.name}"]
 }
 
 output "dataservers_ip" {
-  description = "App Servers IP addresses."
+  description = "Database  Servers IP addresses."
   value       = ["${azurerm_network_interface.data.*.private_ip_address}"]
 }
 
 output "addsservers_name" {
-  description = "adds Servers names."
+  description = "Domain Controllers names."
   value       = ["${azurerm_virtual_machine.adds.*.name}"]
 }
 
@@ -38,14 +38,19 @@ output "addsservers_ip" {
   value       = ["${azurerm_network_interface.adds.*.private_ip_address}"]
 }
 
-output "mgtservers_name" {
-  description = "mgt Servers names."
+output "bastion_name" {
+  description = "Management Servers (Bastion host) names."
   value       = ["${azurerm_virtual_machine.mgt.*.name}"]
 }
 
-output "mgtservers_ip" {
-  description = "App Servers IP addresses."
+output "bastion_priv-ip" {
+  description = "Bastion hosts private IP addresses."
   value       = ["${azurerm_network_interface.mgt.*.private_ip_address}"]
+}
+
+output "bastion_pub-ip" {
+  description = "Bastion hosts public IP addresses."
+  value       = ["${azurerm_public_ip.PublicIP.*.ip_address}"]
 }
 
 output "LB_VIP_IP" {

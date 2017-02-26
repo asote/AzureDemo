@@ -363,7 +363,7 @@ variable "addsimage-offer" {
 
 variable "addsimage-sku" {
   description = "Image sku."
-  default     = "2012-R2-addscenter"
+  default     = "2012-R2-Datacenter"
 }
 
 variable "addsimage-version" {
@@ -373,7 +373,7 @@ variable "addsimage-version" {
 
 variable "mgt-count" {
   description = "Number of Virtual Machines"
-  default     = 2
+  default     = 1
 }
 
 variable "mgtvm-nicname" {
@@ -413,7 +413,7 @@ variable "mgtimage-offer" {
 
 variable "mgtimage-sku" {
   description = "Image sku."
-  default     = "2012-R2-addscenter"
+  default     = "2012-R2-Datacenter"
 }
 
 variable "mgtimage-version" {
