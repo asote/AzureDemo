@@ -718,3 +718,55 @@ resource "azurerm_availability_set" "data" {
     environment = "${var.environment}"
   }
 }
+
+# Database servers
+resource "azurerm_virtual_machine" "data" {
+  count = "${var.data-count}"
+  name  = "${var.dataserver-name}${count.index + 1}"
+
+  location = "${azurerm_resource_group.rg.location}"
+
+  resource_group_name              = "${azurerm_resource_group.rg.name}"
+  network_interface_ids            = ["${element(azurerm_network_interface.data.*.id, count.index)}"]
+  availability_set_id              = "${azurerm_availability_set.data.id}"
+  delete_os_disk_on_termination    = "true"
+  delete_data_disks_on_termination = "true"
+  vm_size                          = "${var.data-vmsize}"
+
+  storage_image_reference {
+    publisher = "${var.dataimage-publisher}"
+    offer     = "${var.dataimage-offer}"
+    sku       = "${var.dataimage-sku}"
+    version   = "${var.dataimage-version}"
+  }
+
+  storage_os_disk {
+    name          = "osdisk${count.index}"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.dataserver-name}${count.index + 1}-osdisk${count.index}.vhd"
+    caching       = "ReadWrite"
+    create_option = "FromImage"
+  }
+
+  storage_data_disk {
+    name          = "datadisk${count.index}"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.dataserver-name}${count.index + 1}-datadisk${count.index}.vhd"
+    disk_size_gb  = "${var.datadisk-size}"
+    create_option = "Empty"
+    lun           = 0
+  }
+
+  os_profile {
+    computer_name  = "${var.dataserver-name}${count.index + 1}"
+    admin_username = "${var.admin_username}"
+    admin_password = "${var.admin_password}"
+  }
+
+  os_profile_windows_config {
+    enable_automatic_upgrades = "false"
+    provision_vm_agent        = "true"
+  }
+
+  tags {
+    environment = "${var.environment}"
+  }
+}
