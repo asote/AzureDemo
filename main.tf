@@ -686,3 +686,22 @@ resource "azurerm_virtual_machine" "app" {
     environment = "${var.environment}"
   }
 }
+
+# VMs for Data subnet
+# Data subnet nics.
+
+resource "azurerm_network_interface" "data" {
+  count               = "${var.data-count}"
+  name                = "${var.datavm-nicname}${count.index + 1}"
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+
+  network_security_group_id = "${azurerm_network_security_group.data-nsg.id}"
+
+  ip_configuration {
+    name                          = "ipconfig${count.index +1}"
+    subnet_id                     = "${azurerm_subnet.data.id}"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "${var.data-staticip}${count.index + 5}"
+  }
+}

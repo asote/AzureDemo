@@ -270,3 +270,18 @@ variable "appimage-version" {
   description = "Image version."
   default     = "latest"
 }
+
+variable "data-count" {
+  description = "Number of Virtual Machines"
+  default     = 2
+}
+
+variable "datavm-nicname" {
+  description = "Naming convention for data servers."
+  default     = "vmnic-data-"
+}
+
+variable "data-staticip" {
+  description = "Starting static IP address for data servers. First 3 octects."
+  default     = "10.0.3."
+}
