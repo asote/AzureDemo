@@ -235,3 +235,8 @@ variable "intbe-ippoolname" {
   description = "Back End Address Pool."
   default     = "BackEndAddressPool"
 }
+
+variable "app-availset" {
+  description = "Availability Set name for app servers."
+  default     = "AppAvailSet"
+}
