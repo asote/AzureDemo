@@ -529,4 +529,8 @@ resource "azurerm_virtual_machine" "web" {
     enable_automatic_upgrades = "false"
     provision_vm_agent        = "true"
   }
+
+  tags {
+    environment = "${var.environment}"
+  }
 }
