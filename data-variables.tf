@@ -285,3 +285,38 @@ variable "data-staticip" {
   description = "Starting static IP address for data servers. First 3 octects."
   default     = "10.0.3."
 }
+
+variable "data-availset" {
+  description = "Availability Set name for data servers."
+  default     = "dataAvailSet"
+}
+
+variable "dataserver-name" {
+  description = "data server naming convention."
+  default     = "data"
+}
+
+variable "data-vmsize" {
+  description = "data server vm size."
+  default     = "Standard_A2"
+}
+
+variable "dataimage-publisher" {
+  description = "Image publisher."
+  default     = "MicrosoftWindowsServer"
+}
+
+variable "dataimage-offer" {
+  description = "Image offer."
+  default     = "WindowsServer"
+}
+
+variable "dataimage-sku" {
+  description = "Image sku."
+  default     = "2012-R2-Datacenter"
+}
+
+variable "dataimage-version" {
+  description = "Image version."
+  default     = "latest"
+}

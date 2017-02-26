@@ -705,3 +705,16 @@ resource "azurerm_network_interface" "data" {
     private_ip_address            = "${var.data-staticip}${count.index + 5}"
   }
 }
+
+# Data tier availability set
+resource "azurerm_availability_set" "data" {
+  name                         = "${var.data-availset}"
+  location                     = "${azurerm_resource_group.rg.location}"
+  resource_group_name          = "${azurerm_resource_group.rg.name}"
+  platform_update_domain_count = "5"
+  platform_fault_domain_count  = "3"
+
+  tags {
+    environment = "${var.environment}"
+  }
+}
