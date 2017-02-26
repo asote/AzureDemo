@@ -220,3 +220,18 @@ variable "app-staticip" {
   description = "Starting static IP address for app servers. First 3 octects."
   default     = "10.0.2."
 }
+
+variable "intlb-name" {
+  description = "Front End Load Balancer name."
+  default     = "App-LB"
+}
+
+variable "intfe-ipconfig" {
+  description = "Front End IP configuration name."
+  default     = "app-LoadBalancer"
+}
+
+variable "intbe-ippoolname" {
+  description = "Back End Address Pool."
+  default     = "BackEndAddressPool"
+}

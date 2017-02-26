@@ -397,7 +397,7 @@ resource "azurerm_network_interface" "public" {
 
 # Internet facing load load balancer
 
-# Load Balncer VIP address
+# Load Balancer VIP address
 resource "azurerm_public_ip" "vip" {
   name                         = "${var.vip-name}"
   location                     = "${azurerm_resource_group.rg.location}"
@@ -552,4 +552,72 @@ resource "azurerm_network_interface" "app" {
     private_ip_address                      = "${var.app-staticip}${count.index + 5}"
     load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.app.id}"]
   }
+}
+
+# Internal load balancer
+
+# Front End Load Balancer
+resource "azurerm_lb" "app" {
+  name                = "${var.intlb-name}"
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+
+  frontend_ip_configuration {
+    name                          = "${var.intfe-ipconfig}"
+    subnet_id                     = "${azurerm_subnet.app.id}"
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+# Back End Address Pool
+resource "azurerm_lb_backend_address_pool" "app" {
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id     = "${azurerm_lb.app.id}"
+  name                = "${var.intbe-ippoolname}"
+}
+
+# Load Balancer Rules
+resource "azurerm_lb_rule" "http-rule-app" {
+  location                       = "${azurerm_resource_group.rg.location}"
+  resource_group_name            = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id                = "${azurerm_lb.app.id}"
+  name                           = "HTTPRule"
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = 80
+  frontend_ip_configuration_name = "${var.intfe-ipconfig}"
+  backend_address_pool_id        = "${azurerm_lb_backend_address_pool.app.id}"
+  probe_id                       = "${azurerm_lb_probe.http-app.id}"
+  depends_on                     = ["azurerm_lb_probe.http-app"]
+}
+
+resource "azurerm_lb_rule" "https-rule-app" {
+  location                       = "${azurerm_resource_group.rg.location}"
+  resource_group_name            = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id                = "${azurerm_lb.app.id}"
+  name                           = "HTTPSRule"
+  protocol                       = "Tcp"
+  frontend_port                  = 443
+  backend_port                   = 443
+  frontend_ip_configuration_name = "${var.intfe-ipconfig}"
+  backend_address_pool_id        = "${azurerm_lb_backend_address_pool.app.id}"
+  probe_id                       = "${azurerm_lb_probe.https-app.id}"
+  depends_on                     = ["azurerm_lb_probe.https-app"]
+}
+
+resource "azurerm_lb_probe" "http-app" {
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id     = "${azurerm_lb.app.id}"
+  name                = "HTTP"
+  port                = 80
+}
+
+resource "azurerm_lb_probe" "https-app" {
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+  loadbalancer_id     = "${azurerm_lb.app.id}"
+  name                = "HTTPS"
+  port                = 443
 }
