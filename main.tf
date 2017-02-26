@@ -789,3 +789,16 @@ resource "azurerm_network_interface" "adds" {
     private_ip_address            = "${var.adds-staticip}${count.index + 5}"
   }
 }
+
+# ADDS Availability Set
+resource "azurerm_availability_set" "adds" {
+  name                         = "${var.adds-availset}"
+  location                     = "${azurerm_resource_group.rg.location}"
+  resource_group_name          = "${azurerm_resource_group.rg.name}"
+  platform_update_domain_count = "5"
+  platform_fault_domain_count  = "3"
+
+  tags {
+    environment = "${var.environment}"
+  }
+}
