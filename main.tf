@@ -854,3 +854,28 @@ resource "azurerm_virtual_machine" "adds" {
     environment = "${var.environment}"
   }
 }
+
+# VMs for Management subnet
+# Management subnet nics.
+resource "azurerm_network_interface" "mgt" {
+  count               = "${var.mgt-count}"
+  name                = "${var.mgtvm-nicname}${count.index + 1}"
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+
+  network_security_group_id = "${azurerm_network_security_group.mgt-nsg.id}"
+
+  ip_configuration {
+    name                          = "ipconfig${count.index +1}"
+    subnet_id                     = "${azurerm_subnet.mgt.id}"
+    private_ip_address_allocation = "dynamic"
+    public_ip_address_id          = "${azurerm_public_ip.PublicIP.id}"
+  }
+}
+
+resource "azurerm_public_ip" "PublicIP" {
+  name                         = "${var.bastion-ip}"
+  location                     = "${azurerm_resource_group.rg.location}"
+  resource_group_name          = "${azurerm_resource_group.rg.name}"
+  public_ip_address_allocation = "static"
+}

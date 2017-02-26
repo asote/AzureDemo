@@ -370,3 +370,58 @@ variable "addsimage-version" {
   description = "Image version."
   default     = "latest"
 }
+
+variable "mgt-count" {
+  description = "Number of Virtual Machines"
+  default     = 2
+}
+
+variable "mgtsvm-nicname" {
+  description = "Naming convention for mgt servers."
+  default     = "vmnic-mgt-"
+}
+
+variable "mgt-staticip" {
+  description = "Starting static IP address for mgt servers."
+  default     = "10.0.0.128"
+}
+
+variable "mgt-availset" {
+  description = "Availability Set name for mgt servers."
+  default     = "mgtAvailSet"
+}
+
+variable "mgtserver-name" {
+  description = "mgt server naming convention."
+  default     = "mgt"
+}
+
+variable "mgts-vmsize" {
+  description = "mgt server vm size."
+  default     = "Standard_A2"
+}
+
+variable "mgtimage-publisher" {
+  description = "Image publisher."
+  default     = "MicrosoftWindowsServer"
+}
+
+variable "mgtimage-offer" {
+  description = "Image offer."
+  default     = "WindowsServer"
+}
+
+variable "mgtimage-sku" {
+  description = "Image sku."
+  default     = "2012-R2-addscenter"
+}
+
+variable "mgtimage-version" {
+  description = "Image version."
+  default     = "latest"
+}
+
+variable "bastion-ip" {
+  description = "Bastion Public IP address name. Recommended to use VPN."
+  default     = "BastionPublicIP"
+}
