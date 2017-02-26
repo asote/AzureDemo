@@ -444,7 +444,7 @@ resource "azurerm_lb_rule" "https-rule" {
   location                       = "${azurerm_resource_group.rg.location}"
   resource_group_name            = "${azurerm_resource_group.rg.name}"
   loadbalancer_id                = "${azurerm_lb.public.id}"
-  name                           = "HTTPRule"
+  name                           = "HTTPSRule"
   protocol                       = "Tcp"
   frontend_port                  = 443
   backend_port                   = 443
