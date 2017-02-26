@@ -395,9 +395,9 @@ resource "azurerm_network_interface" "public" {
   }
 }
 
-# Internet facing load load_balancer_backend_address_pools_ids
+# Internet facing load load balancer
 
-# VIP address
+# Load Balncer VIP address
 resource "azurerm_public_ip" "vip" {
   name                         = "${var.vip-name}"
   location                     = "${azurerm_resource_group.rg.location}"
@@ -480,5 +480,53 @@ resource "azurerm_availability_set" "web" {
 
   tags {
     environment = "${var.environment}"
+  }
+}
+
+# Web servers
+resource "azurerm_virtual_machine" "web" {
+  count = "${var.web-count}"
+  name  = "${var.webserver-name}"
+
+  location = "${azurerm_resource_group.rg.location}"
+
+  resource_group_name              = "${azurerm_resource_group.rg.name}"
+  network_interface_ids            = ["${element(azurerm_network_interface.public.*.id, count.index)}"]
+  availability_set_id              = "${azurerm_availability_set.web.id}"
+  delete_os_disk_on_termination    = "true"
+  delete_data_disks_on_termination = "true"
+  vm_size                          = "${var.web-vmsize}"
+
+  storage_image_reference {
+    publisher = "${var.webimage-publisher}"
+    offer     = "${var.webimage-offer}"
+    sku       = "${var-webimage-sku}"
+    version   = "${var.webimage-version}"
+  }
+
+  storage_os_disk {
+    name          = "osdisk${count.index}"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver-name}-osdisk${count.index}.vhd"
+    caching       = "ReadWrite"
+    create_option = "FromImage"
+  }
+
+  storage_data_disk {
+    name          = "datadisk${count.index}"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver-name}-datadisk${count.index}.vhd"
+    disk_size_gb  = "${var.datadisk-size}"
+    create_option = "Empty"
+    lun           = 0
+  }
+
+  os_profile {
+    computer_name  = "${var.webserver-name}"
+    admin_username = "${var.admin_username}"
+    admin_password = "${var.admin_password}"
+  }
+
+  os_profile_windows_config {
+    enable_automatic_upgrades = "false"
+    provision_vm_agent        = "true"
   }
 }

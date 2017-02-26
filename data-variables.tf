@@ -171,3 +171,38 @@ variable "web-availset" {
   description = "Availability Set name for web servers."
   default     = "WebAvailSet"
 }
+
+variable "webserver-name" {
+  description = "Web server naming convention."
+  default     = "web-0${count.index + 1}"
+}
+
+variable "web-vmsize" {
+  description = "Web server vm size."
+  default     = "Standard_A2"
+}
+
+variable "webimage-publisher" {
+  description = "Image publisher."
+  default     = "MicrosoftWindowsServer"
+}
+
+variable "webimage-offer" {
+  description = "Image offer."
+  default     = "WindowsServer"
+}
+
+variable "webimage-sku" {
+  description = "Image sku."
+  default     = "2012-R2-Datacenter"
+}
+
+variable "webimage-version" {
+  description = "Image version."
+  default     = "latest"
+}
+
+variable "datadisk-size" {
+  description = "Data disk size."
+  default     = "50"
+}
