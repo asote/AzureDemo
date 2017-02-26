@@ -425,7 +425,7 @@ resource "azurerm_lb_backend_address_pool" "public" {
   name                = "${var.be-ippoolname}"
 }
 
-# Load Balancer Rule
+# Load Balancer Rules
 resource "azurerm_lb_rule" "http-rule" {
   location                       = "${azurerm_resource_group.rg.location}"
   resource_group_name            = "${azurerm_resource_group.rg.name}"
@@ -468,4 +468,17 @@ resource "azurerm_lb_probe" "https" {
   loadbalancer_id     = "${azurerm_lb.public.id}"
   name                = "HTTPS"
   port                = 443
+}
+
+# Web tier availability set.
+resource "azurerm_availability_set" "web" {
+  name                         = "${var.web-availset}"
+  location                     = "${azurerm_resource_group.rg.location}"
+  resource_group_name          = "${azurerm_resource_group.rg.name}"
+  platform_update_domain_count = "5"
+  platform_fault_domain_count  = "3"
+
+  tags {
+    environment = "${var.environment}"
+  }
 }

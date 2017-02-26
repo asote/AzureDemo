@@ -166,3 +166,8 @@ variable "be-ippoolname" {
   description = "Back End Address Pool."
   default     = "BackEndAddressPool"
 }
+
+variable "web-availset" {
+  description = "Availability Set name for web servers."
+  default     = "WebAvailSet"
+}
