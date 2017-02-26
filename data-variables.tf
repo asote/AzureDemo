@@ -376,7 +376,7 @@ variable "mgt-count" {
   default     = 2
 }
 
-variable "mgtsvm-nicname" {
+variable "mgtvm-nicname" {
   description = "Naming convention for mgt servers."
   default     = "vmnic-mgt-"
 }
