@@ -1,5 +1,5 @@
-# tf-azure-arm
-Azure RM + Terraform
+# Azure Demo
+Provisioning in Microsoft Azure RM using Terraform
 
 Sample terraform configuration files to provision and deploy  VMs in Azure Resource Manager.
 
