@@ -31,3 +31,88 @@ variable "azure-blobcontainer" {
   description = "Azure storage blob container name."
   default     = "vhds"
 }
+
+variable "azure-containertype" {
+  description = "Azure storage blob container type."
+  default     = "private"
+}
+
+variable "environment" {
+  description = "Tag name for environment"
+  default     = "dev"
+}
+
+variable "vnet" {
+  description = "Virtual Network Name"
+  default     = "development"
+}
+
+variable "cidr-block" {
+  description = "Virtual Network Address Space."
+  default     = "10.0.0.0/16"
+}
+
+variable "dns-servers" {
+  description = "DNS servers."
+  default     = "168.63.129.16" # default Azure DNS for virtual public IP address that is used to facilitate a communication channel to internal platform resources for the bring-your-own IP Virtual Network scenario. 
+}
+
+variable "public-subnet" {
+  description = "Public subnet name"
+  default     = "web-tier"
+}
+
+variable "public-cidr" {
+  description = "Public subnet cidr block"
+  default     = "10.0.1.0/24"
+}
+
+variable "public-nsg" {
+  description = "Network Security Group for public subnet."
+  default     = "web-tier-nsg"
+}
+
+variable "mgt-subnet" {
+  description = "Management subnet name."
+  default     = "mgt-tier"
+}
+
+variable "mgt-cidr" {
+  description = "Public subnet cidr block"
+  default     = "10.0.0.128/25"
+}
+
+variable "mgt-nsg" {
+  description = "Network Security Group for mgt subnet."
+  default     = "mgt-tier-nsg"
+}
+
+variable "app-subnet" {
+  description = "App subnet name."
+  default     = "app-tier"
+}
+
+variable "app-cidr" {
+  description = "App subnet cidr block"
+  default     = "10.0.2.0/24"
+}
+
+variable "app-nsg" {
+  description = "Network Security Group for app subnet."
+  default     = "app-tier-nsg"
+}
+
+variable "data-subnet" {
+  description = "Data subnet name."
+  default     = "data-tier"
+}
+
+variable "data-cidr" {
+  description = "Data subnet cidr block"
+  default     = "10.0.3.0/24"
+}
+
+variable "data-nsg" {
+  description = "Network Security Group for data subnet."
+  default     = "data-tier-nsg"
+}
