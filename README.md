@@ -1,7 +1,12 @@
 # Azure Demo
 Provisioning in Microsoft Azure RM using Terraform
 
-Sample terraform configuration files to provision and deploy  VMs in Azure Resource Manager.
+Sample terraform configuration files to provision and deploy an N-tier architecture in Azure Resource Manager.
+* Virtual network with 5 subnets (web, app, data, adds, and mgt).
+* 1 Internet facing load balancer (for web subnet) and 1 internal load balancer (for app subnet).
+* HA using availability sets.
+* Bastion host
+
 
 ##Running Windows VMs for an N-tier architecture on Azure
 
