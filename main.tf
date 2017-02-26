@@ -290,18 +290,85 @@ resource "azurerm_network_security_group" "data-nsg" {
 }
 
 # Active Directory subnet
-resource "azurerm_subnet" "subnet4" {
-  name                      = "ADDS_net"
-  resource_group_name       = "${azurerm_resource_group.ResourceGrps.name}"
-  virtual_network_name      = "${azurerm_virtual_network.vnet1.name}"
-  address_prefix            = "10.0.4.0/27"
-  network_security_group_id = "${azurerm_network_security_group.tier4_fw.id}"
+
+resource "azurerm_subnet" "adds" {
+  name                      = "${var.adds-subnet}"
+  resource_group_name       = "${azurerm_resource_group.rg.name}"
+  virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
+  address_prefix            = "${var.adds-cidr}"
+  network_security_group_id = "${azurerm_network_security_group.adds-nsg.id}"
 }
 
-resource "azurerm_subnet" "subnet5" {
-  name                      = "management_net"
-  resource_group_name       = "${azurerm_resource_group.ResourceGrps.name}"
-  virtual_network_name      = "${azurerm_virtual_network.vnet1.name}"
-  address_prefix            = "10.0.0.128/25"
-  network_security_group_id = "${azurerm_network_security_group.tier5_fw.id}"
+# Active Directory NSG
+
+resource "azurerm_network_security_group" "adds-nsg" {
+  name                = "${var.adds-nsg}"
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+
+  security_rule {
+    name                       = "allow-tcp-ad"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "${var.data-cidr}"
+    destination_address_prefix = "${var.adds-cidr}"
+  }
+
+  security_rule {
+    name                       = "allow-winrm"
+    priority                   = 101
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "5985-5986"
+    source_address_prefix      = "*"
+    destination_address_prefix = "${var.adds-cidr}"
+  }
+
+  security_rule {
+    name                       = "allow-RDP"
+    priority                   = 103
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = "${var.adds-cidr}"
+    destination_address_prefix = "${var.mgt-cidr}"
+  }
+}
+
+# Management subnet
+
+resource "azurerm_subnet" "mgt" {
+  name                      = "${var.mgt-subnet}"
+  resource_group_name       = "${azurerm_resource_group.rg.name}"
+  virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
+  address_prefix            = "${mgt-cidr}"
+  network_security_group_id = "${azurerm_network_security_group.mgt-nsg.id}"
+}
+
+# Management subnet NSG
+
+resource "azurerm_network_security_group" "mgt-nsg" {
+  name                = "${var.mgt-nsg}"
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+
+  security_rule {
+    name                       = "allow-RDP"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = "*"
+    destination_address_prefix = "${var.mgt-cidr}"
+  }
 }

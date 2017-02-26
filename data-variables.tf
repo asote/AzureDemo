@@ -116,3 +116,18 @@ variable "data-nsg" {
   description = "Network Security Group for data subnet."
   default     = "data-tier-nsg"
 }
+
+variable "adds-subnet" {
+  description = "Active Directory subnet name."
+  default     = "adds-tier"
+}
+
+variable "adds-cidr" {
+  description = "Active Directory subnet cidr block"
+  default     = "10.0.4.0/27"
+}
+
+variable "adds-nsg" {
+  description = "Network Security Group for ADDS subnet."
+  default     = "adds-tier-nsg"
+}
