@@ -14,12 +14,12 @@ variable "azure-region" {
 
 variable "azure-resourcegroup" {
   description = "Azure resource group name"
-  default     = "${var.azure-region}-rg"
+  default     = "demo-rg"
 }
 
 variable "azure-storageacc" {
   description = "Azure storage account name."
-  default     = "${var.azure-resourcegroup}-sta"
+  default     = "demo-sta"
 }
 
 variable "azure-storageacctype" {
@@ -139,12 +139,12 @@ variable "web-count" {
 
 variable "webvm-nicname" {
   description = "Naming convention for web servers."
-  default     = "vmnic-web-0${count.index + 1}"
+  default     = "vmnic-web-"
 }
 
 variable "web-staticip" {
-  description = "Starting static IP address for web servers."
-  default     = "10.0.1.${count.index + 5}"
+  description = "Starting static IP address for web servers. First 3 octects."
+  default     = "10.0.1."
 }
 
 variable "vip-name" {
@@ -174,7 +174,7 @@ variable "web-availset" {
 
 variable "webserver-name" {
   description = "Web server naming convention."
-  default     = "web-0${count.index + 1}"
+  default     = "web-"
 }
 
 variable "web-vmsize" {

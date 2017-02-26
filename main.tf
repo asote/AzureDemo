@@ -189,8 +189,8 @@ resource "azurerm_subnet" "data" {
 
 resource "azurerm_network_security_group" "data-nsg" {
   name                = "sql_fw"
-  location            = "${azurerm_resource_group.ResourceGrps.location}"
-  resource_group_name = "${azurerm_resource_group.ResourceGrps.name}"
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
 
   security_rule {
     name                       = "allow-sql"
@@ -380,7 +380,7 @@ resource "azurerm_network_security_group" "mgt-nsg" {
 # Public subnet nics
 resource "azurerm_network_interface" "public" {
   count               = "${var.web-count}"
-  name                = "${var.webvm-nicname}"
+  name                = "${var.webvm-nicname}${count.index + 1}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -390,7 +390,7 @@ resource "azurerm_network_interface" "public" {
     name                                    = "ipconfig${count.index +1}"
     subnet_id                               = "${azurerm_subnet.public.id}"
     private_ip_address_allocation           = "Static"
-    private_ip_address                      = "${var.web-staticip}"
+    private_ip_address                      = "${var.web-staticip}${count.index + 5}"
     load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.public.id}"]
   }
 }
@@ -486,7 +486,7 @@ resource "azurerm_availability_set" "web" {
 # Web servers
 resource "azurerm_virtual_machine" "web" {
   count = "${var.web-count}"
-  name  = "${var.webserver-name}"
+  name  = "${var.webserver-name}${count.index + 1}"
 
   location = "${azurerm_resource_group.rg.location}"
 
