@@ -320,3 +320,53 @@ variable "dataimage-version" {
   description = "Image version."
   default     = "latest"
 }
+
+variable "adds-count" {
+  description = "Number of Virtual Machines"
+  default     = 2
+}
+
+variable "addsvm-nicname" {
+  description = "Naming convention for adds servers."
+  default     = "vmnic-adds-"
+}
+
+variable "adds-staticip" {
+  description = "Starting static IP address for adds servers. First 3 octects."
+  default     = "10.0.4."
+}
+
+variable "adds-availset" {
+  description = "Availability Set name for adds servers."
+  default     = "addsAvailSet"
+}
+
+variable "addsserver-name" {
+  description = "adds server naming convention."
+  default     = "adds"
+}
+
+variable "adds-vmsize" {
+  description = "adds server vm size."
+  default     = "Standard_A2"
+}
+
+variable "addsimage-publisher" {
+  description = "Image publisher."
+  default     = "MicrosoftWindowsServer"
+}
+
+variable "addsimage-offer" {
+  description = "Image offer."
+  default     = "WindowsServer"
+}
+
+variable "addsimage-sku" {
+  description = "Image sku."
+  default     = "2012-R2-addscenter"
+}
+
+variable "addsimage-version" {
+  description = "Image version."
+  default     = "latest"
+}
