@@ -349,7 +349,7 @@ resource "azurerm_subnet" "mgt" {
   name                      = "${var.mgt-subnet}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
-  address_prefix            = "${mgt-cidr}"
+  address_prefix            = "${var.mgt-cidr}"
   network_security_group_id = "${azurerm_network_security_group.mgt-nsg.id}"
 }
 
@@ -500,7 +500,7 @@ resource "azurerm_virtual_machine" "web" {
   storage_image_reference {
     publisher = "${var.webimage-publisher}"
     offer     = "${var.webimage-offer}"
-    sku       = "${var-webimage-sku}"
+    sku       = "${var.webimage-sku}"
     version   = "${var.webimage-version}"
   }
 

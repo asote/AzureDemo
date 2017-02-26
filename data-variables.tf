@@ -19,7 +19,7 @@ variable "azure-resourcegroup" {
 
 variable "azure-storageacc" {
   description = "Azure storage account name."
-  default     = "demo-sta"
+  default     = "demosta1"
 }
 
 variable "azure-storageacctype" {
