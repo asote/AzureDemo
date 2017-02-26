@@ -119,7 +119,7 @@ resource "azurerm_subnet" "app" {
 
 # App subnet NSG
 resource "azurerm_network_security_group" "app-nsg" {
-  name                = "${var.app-subnet}"
+  name                = "${var.app-nsg}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -188,7 +188,7 @@ resource "azurerm_subnet" "data" {
 # Allow SQL and RDP.  Deny HTTP from tier1,tier2 and Internet 
 
 resource "azurerm_network_security_group" "data-nsg" {
-  name                = "sql_fw"
+  name                = "${var.data-nsg}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -506,21 +506,21 @@ resource "azurerm_virtual_machine" "web" {
 
   storage_os_disk {
     name          = "osdisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver-name}-osdisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver-name}${count.index + 1}-osdisk${count.index}.vhd"
     caching       = "ReadWrite"
     create_option = "FromImage"
   }
 
   storage_data_disk {
     name          = "datadisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver-name}-datadisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver-name}${count.index + 1}-datadisk${count.index}.vhd"
     disk_size_gb  = "${var.datadisk-size}"
     create_option = "Empty"
     lun           = 0
   }
 
   os_profile {
-    computer_name  = "${var.webserver-name}"
+    computer_name  = "${var.webserver-name}${count.index + 1}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }

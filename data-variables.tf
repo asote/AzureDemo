@@ -1,10 +1,9 @@
 variable "admin_username" {
-  description = "administrator's user name"
-  default     = "administrator"
+  description = "administrator's user name. Cannot be administrator"
 }
 
 variable "admin_password" {
-  description = "administrator's password"
+  description = "administrator's password. Use upper lower case, numbers and symbols."
 }
 
 variable "azure-region" {
@@ -174,7 +173,7 @@ variable "web-availset" {
 
 variable "webserver-name" {
   description = "Web server naming convention."
-  default     = "web-"
+  default     = "web"
 }
 
 variable "web-vmsize" {
