@@ -56,6 +56,18 @@ variable "dns-servers" {
   default     = "168.63.129.16" # default Azure DNS for virtual public IP address that is used to facilitate a communication channel to internal platform resources for the bring-your-own IP Virtual Network scenario. 
 }
 
+variable "subnet" {
+  description = "Subnet cidr blocks."
+
+  default = {
+    web  = "10.0.1.0/24"
+    app  = "10.0.2.0/24"
+    data = "10.0.3.0/24"
+    adds = "10.0.4.0/24"
+    mgt  = "10.0.0.128/25"
+  }
+}
+
 variable "public-subnet" {
   description = "Public subnet name"
   default     = "web-tier"
