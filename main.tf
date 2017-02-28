@@ -68,7 +68,7 @@ resource "azurerm_network_security_group" "public-nsg" {
     source_port_range          = "*"
     destination_port_range     = 80
     source_address_prefix      = "*"
-    destination_address_prefix = "${var.public-cidr}"
+    destination_address_prefix = "${var.subnet["web"]}"
   }
 
   security_rule {
@@ -80,7 +80,7 @@ resource "azurerm_network_security_group" "public-nsg" {
     source_port_range          = "*"
     destination_port_range     = 443
     source_address_prefix      = "*"
-    destination_address_prefix = "${var.public-cidr}"
+    destination_address_prefix = "${var.subnet["web"]}"
   }
 
   security_rule {
@@ -92,7 +92,7 @@ resource "azurerm_network_security_group" "public-nsg" {
     source_port_range          = "*"
     destination_port_range     = "5985-5986"
     source_address_prefix      = "*"
-    destination_address_prefix = "${var.public-cidr}"
+    destination_address_prefix = "${var.subnet["web"]}"
   }
 
   security_rule {
@@ -103,8 +103,8 @@ resource "azurerm_network_security_group" "public-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "3389"
-    source_address_prefix      = "${var.public-cidr}"
-    destination_address_prefix = "${var.mgt-cidr}"
+    source_address_prefix      = "${var.subnet["web"]}"
+    destination_address_prefix = "${var.subnet["mgt"]}"
   }
 }
 
@@ -113,7 +113,7 @@ resource "azurerm_subnet" "app" {
   name                      = "${var.app-subnet}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
-  address_prefix            = "${var.app-cidr}"
+  address_prefix            = "${var.subnet["app"]}"
   network_security_group_id = "${azurerm_network_security_group.app-nsg.id}"
 }
 
@@ -131,8 +131,8 @@ resource "azurerm_network_security_group" "app-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = 80
-    source_address_prefix      = "${var.public-cidr}"
-    destination_address_prefix = "${var.app-cidr}"
+    source_address_prefix      = "${var.subnet["web"]}"
+    destination_address_prefix = "${var.subnet["app"]}"
   }
 
   security_rule {
@@ -143,8 +143,8 @@ resource "azurerm_network_security_group" "app-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = 80
-    source_address_prefix      = "${var.public-cidr}"
-    destination_address_prefix = "${var.app-cidr}"
+    source_address_prefix      = "${var.subnet["web"]}"
+    destination_address_prefix = "${var.subnet["app"]}"
   }
 
   security_rule {
@@ -156,7 +156,7 @@ resource "azurerm_network_security_group" "app-nsg" {
     source_port_range          = "*"
     destination_port_range     = "5985-5986"
     source_address_prefix      = "*"
-    destination_address_prefix = "${var.app-cidr}"
+    destination_address_prefix = "${var.subnet["app"]}"
   }
 
   security_rule {
@@ -167,8 +167,8 @@ resource "azurerm_network_security_group" "app-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "3389"
-    source_address_prefix      = "${var.app-cidr}"
-    destination_address_prefix = "${var.mgt-cidr}"
+    source_address_prefix      = "${var.subnet["app"]}"
+    destination_address_prefix = "${var.subnet["mgt"]}"
   }
 }
 
@@ -178,7 +178,7 @@ resource "azurerm_subnet" "data" {
   name                      = "${var.data-subnet}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
-  address_prefix            = "${var.data-cidr}"
+  address_prefix            = "${var.subnet["data"]}"
   network_security_group_id = "${azurerm_network_security_group.data-nsg.id}"
 }
 
@@ -200,7 +200,7 @@ resource "azurerm_network_security_group" "data-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "1433"
-    source_address_prefix      = "${var.app-cidr}"
+    source_address_prefix      = "${var.subnet["app"]}"
     destination_address_prefix = "*"
   }
 
@@ -212,8 +212,8 @@ resource "azurerm_network_security_group" "data-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "3389"
-    source_address_prefix      = "${var.app-cidr}"
-    destination_address_prefix = "${var.mgt-cidr}"
+    source_address_prefix      = "${var.subnet["app"]}"
+    destination_address_prefix = "${var.subnet["mgt"]}"
   }
 
   security_rule {
@@ -224,7 +224,7 @@ resource "azurerm_network_security_group" "data-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "80"
-    source_address_prefix      = "${var.app-cidr}"
+    source_address_prefix      = "${var.subnet["app"]}"
     destination_address_prefix = "*"
   }
 
@@ -237,7 +237,7 @@ resource "azurerm_network_security_group" "data-nsg" {
     source_port_range          = "*"
     destination_port_range     = "80"
     source_address_prefix      = "*"
-    destination_address_prefix = "${var.app-cidr}"
+    destination_address_prefix = "${var.subnet["app"]}"
   }
 
   security_rule {
@@ -248,7 +248,7 @@ resource "azurerm_network_security_group" "data-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "80"
-    source_address_prefix      = "${var.public-cidr}"
+    source_address_prefix      = "${var.subnet["web"]}"
     destination_address_prefix = "*"
   }
 
@@ -261,7 +261,7 @@ resource "azurerm_network_security_group" "data-nsg" {
     source_port_range          = "*"
     destination_port_range     = "80"
     source_address_prefix      = "*"
-    destination_address_prefix = "${var.public-cidr}"
+    destination_address_prefix = "${var.subnet["web"]}"
   }
 
   security_rule {
@@ -295,7 +295,7 @@ resource "azurerm_subnet" "adds" {
   name                      = "${var.adds-subnet}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
-  address_prefix            = "${var.adds-cidr}"
+  address_prefix            = "${var.subnet["adds"]}"
   network_security_group_id = "${azurerm_network_security_group.adds-nsg.id}"
 }
 
@@ -314,8 +314,8 @@ resource "azurerm_network_security_group" "adds-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "*"
-    source_address_prefix      = "${var.data-cidr}"
-    destination_address_prefix = "${var.adds-cidr}"
+    source_address_prefix      = "${var.subnet["data"]}"
+    destination_address_prefix = "${var.subnet["adds"]}"
   }
 
   security_rule {
@@ -327,7 +327,7 @@ resource "azurerm_network_security_group" "adds-nsg" {
     source_port_range          = "*"
     destination_port_range     = "5985-5986"
     source_address_prefix      = "*"
-    destination_address_prefix = "${var.adds-cidr}"
+    destination_address_prefix = "${var.subnet["adds"]}"
   }
 
   security_rule {
@@ -338,8 +338,8 @@ resource "azurerm_network_security_group" "adds-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "3389"
-    source_address_prefix      = "${var.adds-cidr}"
-    destination_address_prefix = "${var.mgt-cidr}"
+    source_address_prefix      = "${var.subnet["adds"]}"
+    destination_address_prefix = "${var.subnet["mgt"]}"
   }
 }
 
@@ -349,7 +349,7 @@ resource "azurerm_subnet" "mgt" {
   name                      = "${var.mgt-subnet}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
-  address_prefix            = "${var.mgt-cidr}"
+  address_prefix            = "${var.subnet["mgt"]}"
   network_security_group_id = "${azurerm_network_security_group.mgt-nsg.id}"
 }
 
@@ -369,7 +369,7 @@ resource "azurerm_network_security_group" "mgt-nsg" {
     source_port_range          = "*"
     destination_port_range     = "3389"
     source_address_prefix      = "*"
-    destination_address_prefix = "${var.mgt-cidr}"
+    destination_address_prefix = "${var.subnet["mgt"]}"
   }
 }
 
@@ -496,6 +496,7 @@ resource "azurerm_virtual_machine" "web" {
   delete_os_disk_on_termination    = "true"
   delete_data_disks_on_termination = "true"
   vm_size                          = "${var.web-vmsize}"
+  depends_on                       = ["azurerm_network_interface.public", "azurerm_lb.public"]
 
   storage_image_reference {
     publisher = "${var.webimage-publisher}"
@@ -648,6 +649,7 @@ resource "azurerm_virtual_machine" "app" {
   delete_os_disk_on_termination    = "true"
   delete_data_disks_on_termination = "true"
   vm_size                          = "${var.app-vmsize}"
+  depends_on                       = ["azurerm_network_interface.app", "azurerm_lb.app"]
 
   storage_image_reference {
     publisher = "${var.appimage-publisher}"
@@ -732,6 +734,7 @@ resource "azurerm_virtual_machine" "data" {
   delete_os_disk_on_termination    = "true"
   delete_data_disks_on_termination = "true"
   vm_size                          = "${var.data-vmsize}"
+  depends_on                       = ["azurerm_network_interface.data"]
 
   storage_image_reference {
     publisher = "${var.dataimage-publisher}"
@@ -816,6 +819,7 @@ resource "azurerm_virtual_machine" "adds" {
   delete_os_disk_on_termination    = "true"
   delete_data_disks_on_termination = "true"
   vm_size                          = "${var.adds-vmsize}"
+  depends_on                       = ["azurerm_network_interface.adds"]
 
   storage_image_reference {
     publisher = "${var.addsimage-publisher}"
@@ -906,6 +910,7 @@ resource "azurerm_virtual_machine" "mgt" {
   delete_os_disk_on_termination    = "true"
   delete_data_disks_on_termination = "true"
   vm_size                          = "${var.mgt-vmsize}"
+  depends_on                       = ["azurerm_network_interface.mgt"]
 
   storage_image_reference {
     publisher = "${var.mgtimage-publisher}"

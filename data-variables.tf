@@ -73,11 +73,6 @@ variable "public-subnet" {
   default     = "web-tier"
 }
 
-variable "public-cidr" {
-  description = "Public subnet cidr block"
-  default     = "10.0.1.0/24"
-}
-
 variable "public-nsg" {
   description = "Network Security Group for public subnet."
   default     = "web-tier-nsg"
@@ -86,11 +81,6 @@ variable "public-nsg" {
 variable "mgt-subnet" {
   description = "Management subnet name."
   default     = "mgt-tier"
-}
-
-variable "mgt-cidr" {
-  description = "Public subnet cidr block"
-  default     = "10.0.0.128/25"
 }
 
 variable "mgt-nsg" {
@@ -103,11 +93,6 @@ variable "app-subnet" {
   default     = "app-tier"
 }
 
-variable "app-cidr" {
-  description = "App subnet cidr block"
-  default     = "10.0.2.0/24"
-}
-
 variable "app-nsg" {
   description = "Network Security Group for app subnet."
   default     = "app-tier-nsg"
@@ -118,11 +103,6 @@ variable "data-subnet" {
   default     = "data-tier"
 }
 
-variable "data-cidr" {
-  description = "Data subnet cidr block"
-  default     = "10.0.3.0/24"
-}
-
 variable "data-nsg" {
   description = "Network Security Group for data subnet."
   default     = "data-tier-nsg"
@@ -131,11 +111,6 @@ variable "data-nsg" {
 variable "adds-subnet" {
   description = "Active Directory subnet name."
   default     = "adds-tier"
-}
-
-variable "adds-cidr" {
-  description = "Active Directory subnet cidr block"
-  default     = "10.0.4.0/27"
 }
 
 variable "adds-nsg" {
