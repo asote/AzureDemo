@@ -14,11 +14,11 @@ resource "azurerm_resource_group" "rg" {
 
 # Create Azure storage account and container for VHDs.
 resource "azurerm_storage_account" "storage" {
-  name                = "${var.azure-storageacc}"
+  name                = "${var.storage["storaccname"]}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
   location     = "${azurerm_resource_group.rg.location}"
-  account_type = "${var.azure-storageacctype}"
+  account_type = "${var.storage["storacctype"]}"
 
   tags {
     environment = "${var.environment}"
@@ -26,20 +26,20 @@ resource "azurerm_storage_account" "storage" {
 }
 
 resource "azurerm_storage_container" "blob" {
-  name                  = "${var.azure-blobcontainer}"
+  name                  = "${var.storage["contname"]}"
   resource_group_name   = "${azurerm_resource_group.rg.name}"
   storage_account_name  = "${azurerm_storage_account.storage.name}"
-  container_access_type = "${var.azure-containertype}"
+  container_access_type = "${var.storage["contsecurity"]}"
 }
 
 # Create Virtual Network
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "${var.vnet}"
-  address_space       = ["${var.cidr-block}"]
+  name                = "${var.virtualnetwork["vnetname"]}"
+  address_space       = ["${var.virtualnetwork["cidrblk"]}"]
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
-  dns_servers         = ["${var.dns-servers}"]
+  dns_servers         = ["${var.virtualnetwork["dns"]}"]
 }
 
 # Create virtual network subnets

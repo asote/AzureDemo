@@ -1,9 +1,11 @@
 variable "admin_username" {
   description = "administrator's user name. Cannot be administrator"
+  default     = "asotelo"
 }
 
 variable "admin_password" {
   description = "administrator's password. Use upper lower case, numbers and symbols."
+  default     = "Y@naA!N3n4DAbu"
 }
 
 variable "azure-region" {
@@ -16,24 +18,15 @@ variable "azure-resourcegroup" {
   default     = "demo-rg"
 }
 
-variable "azure-storageacc" {
-  description = "Azure storage account name."
-  default     = "demosta1"
-}
+variable "storage" {
+  description = "Storage account name, type and blob container."
 
-variable "azure-storageacctype" {
-  description = "Azure storage account type."
-  default     = "Standard_GRS"
-}
-
-variable "azure-blobcontainer" {
-  description = "Azure storage blob container name."
-  default     = "vhds"
-}
-
-variable "azure-containertype" {
-  description = "Azure storage blob container type."
-  default     = "private"
+  default = {
+    storaccname  = "demosta1"
+    storacctype  = "Standard_GRS"
+    contname     = "vhds"
+    contsecurity = "private"
+  }
 }
 
 variable "environment" {
@@ -41,19 +34,14 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "vnet" {
-  description = "Virtual Network Name"
-  default     = "development"
-}
+variable "virtualnetwork" {
+  description = "Virtual Network name and cidr block."
 
-variable "cidr-block" {
-  description = "Virtual Network Address Space."
-  default     = "10.0.0.0/16"
-}
-
-variable "dns-servers" {
-  description = "DNS servers."
-  default     = "168.63.129.16" # default Azure DNS for virtual public IP address that is used to facilitate a communication channel to internal platform resources for the bring-your-own IP Virtual Network scenario. 
+  default = {
+    vnetname = "development"
+    cidrblk  = "10.0.0.0/16"
+    dns      = "168.63.129.16" # default Azure DNS for virtual public IP address that is used to facilitate a communication channel to internal platform resources for the bring-your-own IP Virtual Network scenario. 
+  }
 }
 
 variable "subnet" {
