@@ -399,7 +399,7 @@ resource "azurerm_network_interface" "public" {
 
 # Load Balancer VIP address
 resource "azurerm_public_ip" "vip" {
-  name                         = "${var.vip-name}"
+  name                         = "${var.extlb["vipname"]}"
   location                     = "${azurerm_resource_group.rg.location}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   public_ip_address_allocation = "static"
@@ -407,12 +407,12 @@ resource "azurerm_public_ip" "vip" {
 
 # Front End Load Balancer
 resource "azurerm_lb" "public" {
-  name                = "${var.lb-name}"
+  name                = "${var.extlb["lbname"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
   frontend_ip_configuration {
-    name                 = "${var.fe-ipconfig}"
+    name                 = "${var.extlb["frontend"]}"
     public_ip_address_id = "${azurerm_public_ip.vip.id}"
   }
 }
@@ -422,7 +422,7 @@ resource "azurerm_lb_backend_address_pool" "public" {
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
   loadbalancer_id     = "${azurerm_lb.public.id}"
-  name                = "${var.be-ippoolname}"
+  name                = "${var.extlb["backend"]}"
 }
 
 # Load Balancer Rules
@@ -434,7 +434,7 @@ resource "azurerm_lb_rule" "http-rule-public" {
   protocol                       = "Tcp"
   frontend_port                  = 80
   backend_port                   = 80
-  frontend_ip_configuration_name = "${var.fe-ipconfig}"
+  frontend_ip_configuration_name = "${var.extlb["frontend"]}"
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.public.id}"
   probe_id                       = "${azurerm_lb_probe.http-public.id}"
   depends_on                     = ["azurerm_lb_probe.http-public"]
@@ -448,7 +448,7 @@ resource "azurerm_lb_rule" "https-rule-public" {
   protocol                       = "Tcp"
   frontend_port                  = 443
   backend_port                   = 443
-  frontend_ip_configuration_name = "${var.fe-ipconfig}"
+  frontend_ip_configuration_name = "${var.extlb["frontend"]}"
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.public.id}"
   probe_id                       = "${azurerm_lb_probe.https-public.id}"
   depends_on                     = ["azurerm_lb_probe.https-public"]
@@ -559,12 +559,12 @@ resource "azurerm_network_interface" "app" {
 
 # Front End Load Balancer
 resource "azurerm_lb" "app" {
-  name                = "${var.intlb-name}"
+  name                = "${var.intlb["lbname"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
   frontend_ip_configuration {
-    name                          = "${var.intfe-ipconfig}"
+    name                          = "${var.intlb["frontend"]}"
     subnet_id                     = "${azurerm_subnet.app.id}"
     private_ip_address_allocation = "Dynamic"
   }
@@ -575,7 +575,7 @@ resource "azurerm_lb_backend_address_pool" "app" {
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
   loadbalancer_id     = "${azurerm_lb.app.id}"
-  name                = "${var.intbe-ippoolname}"
+  name                = "${var.intlb["backend"]}"
 }
 
 # Load Balancer Rules
@@ -587,7 +587,7 @@ resource "azurerm_lb_rule" "http-rule-app" {
   protocol                       = "Tcp"
   frontend_port                  = 80
   backend_port                   = 80
-  frontend_ip_configuration_name = "${var.intfe-ipconfig}"
+  frontend_ip_configuration_name = "${var.intlb["frontend"]}"
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.app.id}"
   probe_id                       = "${azurerm_lb_probe.http-app.id}"
   depends_on                     = ["azurerm_lb_probe.http-app"]
@@ -601,7 +601,7 @@ resource "azurerm_lb_rule" "https-rule-app" {
   protocol                       = "Tcp"
   frontend_port                  = 443
   backend_port                   = 443
-  frontend_ip_configuration_name = "${var.intfe-ipconfig}"
+  frontend_ip_configuration_name = "${var.intlb["frontend"]}"
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.app.id}"
   probe_id                       = "${azurerm_lb_probe.https-app.id}"
   depends_on                     = ["azurerm_lb_probe.https-app"]

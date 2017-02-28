@@ -164,44 +164,30 @@ variable "mgtserver" {
   }
 }
 
-variable "vip-name" {
-  description = "Load balancer VIP name."
-  default     = "LBPublicIP"
-}
-
-variable "lb-name" {
-  description = "Front End Load Balancer name."
-  default     = "Public-LB"
-}
-
-variable "fe-ipconfig" {
-  description = "Front End IP configuration name."
-  default     = "public-LoadBalancer"
-}
-
-variable "be-ippoolname" {
-  description = "Back End Address Pool."
-  default     = "BackEndAddressPool"
-}
-
 variable "datadisk-size" {
   description = "Data disk size."
   default     = "50"
 }
 
-variable "intlb-name" {
-  description = "Front End Load Balancer name."
-  default     = "App-LB"
+variable "extlb" {
+  description = "Internet facing load balancer confifguration."
+
+  default = {
+    vipname  = "LBPublicIP"
+    lbname   = "Public-LB"
+    frontend = "public-LoadBalancer"
+    backend  = "BackEndAddressPool"
+  }
 }
 
-variable "intfe-ipconfig" {
-  description = "Front End IP configuration name."
-  default     = "app-LoadBalancer"
-}
+variable "intlb" {
+  description = "Intenal load balancer confifguration."
 
-variable "intbe-ippoolname" {
-  description = "Back End Address Pool."
-  default     = "BackEndAddressPool"
+  default = {
+    lbname   = "App-LB"
+    frontend = "app-LoadBalancer"
+    backend  = "BackEndAddressPool"
+  }
 }
 
 variable "bastion-ip" {
