@@ -1,11 +1,11 @@
-variable "azure-region" {
-  description = "Azure Region"
-  default     = "centralus"
-}
+variable "location" {
+  description = "Azure region, resource group name, environment."
 
-variable "azure-resourcegroup" {
-  description = "Azure resource group name"
-  default     = "demo-rg"
+  default = {
+    region = "centralus"
+    rsgrp  = "demo-rg"
+    env    = "demo"
+  }
 }
 
 variable "storage" {
@@ -17,11 +17,6 @@ variable "storage" {
     contname     = "vhds"
     contsecurity = "private"
   }
-}
-
-variable "environment" {
-  description = "Tag name for environment"
-  default     = "dev"
 }
 
 variable "virtualnetwork" {

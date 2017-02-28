@@ -8,8 +8,8 @@ provider "azurerm" {}
 
 # Create Azure resource group.
 resource "azurerm_resource_group" "rg" {
-  name     = "${var.azure-resourcegroup}"
-  location = "${var.azure-region}"
+  name     = "${var.location["rsgrp"]}"
+  location = "${var.location["region"]}"
 }
 
 # Create Azure storage account and container for VHDs.
@@ -21,7 +21,7 @@ resource "azurerm_storage_account" "storage" {
   account_type = "${var.storage["storacctype"]}"
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
 
@@ -479,7 +479,7 @@ resource "azurerm_availability_set" "web" {
   platform_fault_domain_count  = "3"
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
 
@@ -532,7 +532,7 @@ resource "azurerm_virtual_machine" "web" {
   }
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
 
@@ -632,7 +632,7 @@ resource "azurerm_availability_set" "app" {
   platform_fault_domain_count  = "3"
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
 
@@ -685,7 +685,7 @@ resource "azurerm_virtual_machine" "app" {
   }
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
 
@@ -717,7 +717,7 @@ resource "azurerm_availability_set" "data" {
   platform_fault_domain_count  = "3"
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
 
@@ -770,7 +770,7 @@ resource "azurerm_virtual_machine" "data" {
   }
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
 
@@ -802,7 +802,7 @@ resource "azurerm_availability_set" "adds" {
   platform_fault_domain_count  = "3"
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
 
@@ -855,7 +855,7 @@ resource "azurerm_virtual_machine" "adds" {
   }
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
 
@@ -894,7 +894,7 @@ resource "azurerm_availability_set" "mgt" {
   platform_fault_domain_count  = "3"
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
 
@@ -946,6 +946,6 @@ resource "azurerm_virtual_machine" "mgt" {
   }
 
   tags {
-    environment = "${var.environment}"
+    environment = "${var.location["env"]}"
   }
 }
