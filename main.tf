@@ -522,8 +522,8 @@ resource "azurerm_virtual_machine" "web" {
 
   os_profile {
     computer_name  = "${var.webserver["name"]}${count.index + 1}"
-    admin_username = "${var.admin_username}"
-    admin_password = "${var.admin_password}"
+    admin_username = "${var.admin["user"]}"
+    admin_password = "${var.admin["pwd"]}"
   }
 
   os_profile_windows_config {
@@ -675,8 +675,8 @@ resource "azurerm_virtual_machine" "app" {
 
   os_profile {
     computer_name  = "${var.appserver["name"]}${count.index + 1}"
-    admin_username = "${var.admin_username}"
-    admin_password = "${var.admin_password}"
+    admin_username = "${var.admin["user"]}"
+    admin_password = "${var.admin["pwd"]}"
   }
 
   os_profile_windows_config {
@@ -760,8 +760,8 @@ resource "azurerm_virtual_machine" "data" {
 
   os_profile {
     computer_name  = "${var.dataserver["name"]}${count.index + 1}"
-    admin_username = "${var.admin_username}"
-    admin_password = "${var.admin_password}"
+    admin_username = "${var.admin["user"]}"
+    admin_password = "${var.admin["pwd"]}"
   }
 
   os_profile_windows_config {
@@ -845,8 +845,8 @@ resource "azurerm_virtual_machine" "adds" {
 
   os_profile {
     computer_name  = "${var.addsserver["name"]}${count.index + 1}"
-    admin_username = "${var.admin_username}"
-    admin_password = "${var.admin_password}"
+    admin_username = "${var.admin["user"]}"
+    admin_password = "${var.admin["pwd"]}"
   }
 
   os_profile_windows_config {
@@ -936,8 +936,8 @@ resource "azurerm_virtual_machine" "mgt" {
 
   os_profile {
     computer_name  = "${var.mgtserver["name"]}${count.index + 1}"
-    admin_username = "${var.admin_username}"
-    admin_password = "${var.admin_password}"
+    admin_username = "${var.admin["user"]}"
+    admin_password = "${var.admin["pwd"]}"
   }
 
   os_profile_windows_config {
