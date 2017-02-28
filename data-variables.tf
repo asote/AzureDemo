@@ -1,12 +1,3 @@
-variable "admin" {
-  description = "Administrator credentials."
-
-  default = {
-    user = "rabbit"
-    pwd  = "abc123"
-  }
-}
-
 variable "azure-region" {
   description = "Azure Region"
   default     = "centralus"
@@ -67,7 +58,7 @@ variable "subnetname" {
   }
 }
 
-variable "nsgname" {
+variable "nsg" {
   description = "Network Security Group names."
 
   default = {
@@ -77,96 +68,6 @@ variable "nsgname" {
     adds = "adds-tier-nsg"
     mgt  = "mgt-tier-nsg"
   }
-}
-
-variable "webserver" {
-  description = "Web server configuration."
-
-  default = {
-    count     = 2
-    nic       = "vmnic-web-"
-    ip        = "10.0.1."                # Starting static IP address for web servers. First 3 octects
-    vmsize    = "Standard_A2"
-    availset  = "WebAvailSet"
-    name      = "web"
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2012-R2-Datacenter"
-    version   = "latest"
-  }
-}
-
-variable "appserver" {
-  description = "App server configuration."
-
-  default = {
-    count     = 2
-    nic       = "vmnic-app-"
-    ip        = "10.0.2."                # Starting static IP address for web servers. First 3 octects
-    vmsize    = "Standard_A2"
-    availset  = "AppAvailSet"
-    name      = "app"
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2012-R2-Datacenter"
-    version   = "latest"
-  }
-}
-
-variable "dataserver" {
-  description = "Data server configuration."
-
-  default = {
-    count     = 2
-    nic       = "vmnic-data-"
-    ip        = "10.0.3."                # Starting static IP address for web servers. First 3 octects
-    vmsize    = "Standard_A2"
-    availset  = "DataAvailSet"
-    name      = "data"
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2012-R2-Datacenter"
-    version   = "latest"
-  }
-}
-
-variable "addsserver" {
-  description = "ADDS server configuration."
-
-  default = {
-    count     = 2
-    nic       = "vmnic-adds-"
-    ip        = "10.0.4."                # Starting static IP address for web servers. First 3 octects
-    vmsize    = "Standard_A2"
-    availset  = "ADDSAvailSet"
-    name      = "adds"
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2012-R2-Datacenter"
-    version   = "latest"
-  }
-}
-
-variable "mgtserver" {
-  description = "Mgt server configuration."
-
-  default = {
-    count     = 1
-    nic       = "vmnic-mgt-"
-    ip        = "10.0.0.128"
-    vmsize    = "Standard_A2"
-    availset  = "MGTSAvailSet"
-    name      = "mgt"
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2012-R2-Datacenter"
-    version   = "latest"
-  }
-}
-
-variable "datadisk-size" {
-  description = "Data disk size."
-  default     = "50"
 }
 
 variable "extlb" {
@@ -193,4 +94,103 @@ variable "intlb" {
 variable "bastion-ip" {
   description = "Bastion Public IP address name. Recommended to use VPN."
   default     = "BastionPublicIP"
+}
+
+variable "webserver" {
+  description = "Web server configuration."
+
+  default = {
+    count        = 2
+    nic          = "vmnic-web-"
+    ip           = "10.0.1."                # Starting static IP address for web servers. First 3 octects
+    vmsize       = "Standard_A2"
+    availset     = "WebAvailSet"
+    name         = "web"
+    publisher    = "MicrosoftWindowsServer"
+    offer        = "WindowsServer"
+    sku          = "2012-R2-Datacenter"
+    version      = "latest"
+    datadisksize = "50"
+  }
+}
+
+variable "appserver" {
+  description = "App server configuration."
+
+  default = {
+    count        = 2
+    nic          = "vmnic-app-"
+    ip           = "10.0.2."                # Starting static IP address for web servers. First 3 octects
+    vmsize       = "Standard_A2"
+    availset     = "AppAvailSet"
+    name         = "app"
+    publisher    = "MicrosoftWindowsServer"
+    offer        = "WindowsServer"
+    sku          = "2012-R2-Datacenter"
+    version      = "latest"
+    datadisksize = "50"
+  }
+}
+
+variable "dataserver" {
+  description = "Data server configuration."
+
+  default = {
+    count        = 2
+    nic          = "vmnic-data-"
+    ip           = "10.0.3."                # Starting static IP address for web servers. First 3 octects
+    vmsize       = "Standard_A2"
+    availset     = "DataAvailSet"
+    name         = "data"
+    publisher    = "MicrosoftWindowsServer"
+    offer        = "WindowsServer"
+    sku          = "2012-R2-Datacenter"
+    version      = "latest"
+    datadisksize = "50"
+  }
+}
+
+variable "addsserver" {
+  description = "ADDS server configuration."
+
+  default = {
+    count        = 2
+    nic          = "vmnic-adds-"
+    ip           = "10.0.4."                # Starting static IP address for web servers. First 3 octects
+    vmsize       = "Standard_A2"
+    availset     = "ADDSAvailSet"
+    name         = "adds"
+    publisher    = "MicrosoftWindowsServer"
+    offer        = "WindowsServer"
+    sku          = "2012-R2-Datacenter"
+    version      = "latest"
+    datadisksize = "50"
+  }
+}
+
+variable "mgtserver" {
+  description = "Mgt server configuration."
+
+  default = {
+    count        = 1
+    nic          = "vmnic-mgt-"
+    ip           = "10.0.0.128"
+    vmsize       = "Standard_A2"
+    availset     = "MGTSAvailSet"
+    name         = "mgt"
+    publisher    = "MicrosoftWindowsServer"
+    offer        = "WindowsServer"
+    sku          = "2012-R2-Datacenter"
+    version      = "latest"
+    datadisksize = "50"
+  }
+}
+
+variable "admin" {
+  description = "Administrator credentials."
+
+  default = {
+    user = "rabbit"
+    pwd  = "abc123"
+  }
 }

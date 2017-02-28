@@ -55,7 +55,7 @@ resource "azurerm_subnet" "public" {
 
 # Public subnet NSG
 resource "azurerm_network_security_group" "public-nsg" {
-  name                = "${var.nsgname["web"]}"
+  name                = "${var.nsg["web"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -119,7 +119,7 @@ resource "azurerm_subnet" "app" {
 
 # App subnet NSG
 resource "azurerm_network_security_group" "app-nsg" {
-  name                = "${var.nsgname["app"]}"
+  name                = "${var.nsg["app"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -188,7 +188,7 @@ resource "azurerm_subnet" "data" {
 # Allow SQL and RDP.  Deny HTTP from tier1,tier2 and Internet 
 
 resource "azurerm_network_security_group" "data-nsg" {
-  name                = "${var.nsgname["data"]}"
+  name                = "${var.nsg["data"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -302,7 +302,7 @@ resource "azurerm_subnet" "adds" {
 # Active Directory NSG
 
 resource "azurerm_network_security_group" "adds-nsg" {
-  name                = "${var.nsgname["adds"]}"
+  name                = "${var.nsg["adds"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -356,7 +356,7 @@ resource "azurerm_subnet" "mgt" {
 # Management subnet NSG
 
 resource "azurerm_network_security_group" "mgt-nsg" {
-  name                = "${var.nsgname["mgt"]}"
+  name                = "${var.nsg["mgt"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -515,7 +515,7 @@ resource "azurerm_virtual_machine" "web" {
   storage_data_disk {
     name          = "datadisk${count.index}"
     vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
-    disk_size_gb  = "${var.datadisk-size}"
+    disk_size_gb  = "${var.webserver["datadisksize"]}"
     create_option = "Empty"
     lun           = 0
   }
@@ -668,7 +668,7 @@ resource "azurerm_virtual_machine" "app" {
   storage_data_disk {
     name          = "datadisk${count.index}"
     vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.appserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
-    disk_size_gb  = "${var.datadisk-size}"
+    disk_size_gb  = "${var.appserver["datadisksize"]}"
     create_option = "Empty"
     lun           = 0
   }
@@ -753,7 +753,7 @@ resource "azurerm_virtual_machine" "data" {
   storage_data_disk {
     name          = "datadisk${count.index}"
     vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.dataserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
-    disk_size_gb  = "${var.datadisk-size}"
+    disk_size_gb  = "${var.dataserver["datadisksize"]}"
     create_option = "Empty"
     lun           = 0
   }
@@ -838,7 +838,7 @@ resource "azurerm_virtual_machine" "adds" {
   storage_data_disk {
     name          = "datadisk${count.index}"
     vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.addsserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
-    disk_size_gb  = "${var.datadisk-size}"
+    disk_size_gb  = "${var.addsserver["datadisksize"]}"
     create_option = "Empty"
     lun           = 0
   }
@@ -929,7 +929,7 @@ resource "azurerm_virtual_machine" "mgt" {
   storage_data_disk {
     name          = "datadisk${count.index}"
     vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.mgtserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
-    disk_size_gb  = "${var.datadisk-size}"
+    disk_size_gb  = "${var.mgtserver["datadisksize"]}"
     create_option = "Empty"
     lun           = 0
   }
