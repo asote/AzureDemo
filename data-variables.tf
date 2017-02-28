@@ -80,19 +80,89 @@ variable "nsgname" {
   }
 }
 
-variable "web-count" {
-  description = "Number of Virtual Machines"
-  default     = 2
+variable "webserver" {
+  description = "Web server configuration."
+
+  default = {
+    count     = 2
+    nic       = "vmnic-web-"
+    ip        = "10.0.1."                # Starting static IP address for web servers. First 3 octects
+    vmsize    = "Standard_A2"
+    availset  = "WebAvailSet"
+    name      = "web"
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2012-R2-Datacenter"
+    version   = "latest"
+  }
 }
 
-variable "webvm-nicname" {
-  description = "Naming convention for web servers."
-  default     = "vmnic-web-"
+variable "appserver" {
+  description = "App server configuration."
+
+  default = {
+    count     = 2
+    nic       = "vmnic-app-"
+    ip        = "10.0.2."                # Starting static IP address for web servers. First 3 octects
+    vmsize    = "Standard_A2"
+    availset  = "AppAvailSet"
+    name      = "app"
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2012-R2-Datacenter"
+    version   = "latest"
+  }
 }
 
-variable "web-staticip" {
-  description = "Starting static IP address for web servers. First 3 octects."
-  default     = "10.0.1."
+variable "dataserver" {
+  description = "Data server configuration."
+
+  default = {
+    count     = 2
+    nic       = "vmnic-data-"
+    ip        = "10.0.3."                # Starting static IP address for web servers. First 3 octects
+    vmsize    = "Standard_A2"
+    availset  = "DataAvailSet"
+    name      = "data"
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2012-R2-Datacenter"
+    version   = "latest"
+  }
+}
+
+variable "addsserver" {
+  description = "ADDS server configuration."
+
+  default = {
+    count     = 2
+    nic       = "vmnic-adds-"
+    ip        = "10.0.4."                # Starting static IP address for web servers. First 3 octects
+    vmsize    = "Standard_A2"
+    availset  = "ADDSAvailSet"
+    name      = "adds"
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2012-R2-Datacenter"
+    version   = "latest"
+  }
+}
+
+variable "mgtserver" {
+  description = "Mgt server configuration."
+
+  default = {
+    count     = 1
+    nic       = "vmnic-mgt-"
+    ip        = "10.0.0.128"
+    vmsize    = "Standard_A2"
+    availset  = "MGTSAvailSet"
+    name      = "mgt"
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2012-R2-Datacenter"
+    version   = "latest"
+  }
 }
 
 variable "vip-name" {
@@ -115,59 +185,9 @@ variable "be-ippoolname" {
   default     = "BackEndAddressPool"
 }
 
-variable "web-availset" {
-  description = "Availability Set name for web servers."
-  default     = "WebAvailSet"
-}
-
-variable "webserver-name" {
-  description = "Web server naming convention."
-  default     = "web"
-}
-
-variable "web-vmsize" {
-  description = "Web server vm size."
-  default     = "Standard_A2"
-}
-
-variable "webimage-publisher" {
-  description = "Image publisher."
-  default     = "MicrosoftWindowsServer"
-}
-
-variable "webimage-offer" {
-  description = "Image offer."
-  default     = "WindowsServer"
-}
-
-variable "webimage-sku" {
-  description = "Image sku."
-  default     = "2012-R2-Datacenter"
-}
-
-variable "webimage-version" {
-  description = "Image version."
-  default     = "latest"
-}
-
 variable "datadisk-size" {
   description = "Data disk size."
   default     = "50"
-}
-
-variable "app-count" {
-  description = "Number of Virtual Machines"
-  default     = 2
-}
-
-variable "appvm-nicname" {
-  description = "Naming convention for app servers."
-  default     = "vmnic-app-"
-}
-
-variable "app-staticip" {
-  description = "Starting static IP address for app servers. First 3 octects."
-  default     = "10.0.2."
 }
 
 variable "intlb-name" {
@@ -183,191 +203,6 @@ variable "intfe-ipconfig" {
 variable "intbe-ippoolname" {
   description = "Back End Address Pool."
   default     = "BackEndAddressPool"
-}
-
-variable "app-availset" {
-  description = "Availability Set name for app servers."
-  default     = "AppAvailSet"
-}
-
-variable "appserver-name" {
-  description = "App server naming convention."
-  default     = "app"
-}
-
-variable "app-vmsize" {
-  description = "App server vm size."
-  default     = "Standard_A2"
-}
-
-variable "appimage-publisher" {
-  description = "Image publisher."
-  default     = "MicrosoftWindowsServer"
-}
-
-variable "appimage-offer" {
-  description = "Image offer."
-  default     = "WindowsServer"
-}
-
-variable "appimage-sku" {
-  description = "Image sku."
-  default     = "2012-R2-Datacenter"
-}
-
-variable "appimage-version" {
-  description = "Image version."
-  default     = "latest"
-}
-
-variable "data-count" {
-  description = "Number of Virtual Machines"
-  default     = 2
-}
-
-variable "datavm-nicname" {
-  description = "Naming convention for data servers."
-  default     = "vmnic-data-"
-}
-
-variable "data-staticip" {
-  description = "Starting static IP address for data servers. First 3 octects."
-  default     = "10.0.3."
-}
-
-variable "data-availset" {
-  description = "Availability Set name for data servers."
-  default     = "dataAvailSet"
-}
-
-variable "dataserver-name" {
-  description = "data server naming convention."
-  default     = "data"
-}
-
-variable "data-vmsize" {
-  description = "data server vm size."
-  default     = "Standard_A2"
-}
-
-variable "dataimage-publisher" {
-  description = "Image publisher."
-  default     = "MicrosoftWindowsServer"
-}
-
-variable "dataimage-offer" {
-  description = "Image offer."
-  default     = "WindowsServer"
-}
-
-variable "dataimage-sku" {
-  description = "Image sku."
-  default     = "2012-R2-Datacenter"
-}
-
-variable "dataimage-version" {
-  description = "Image version."
-  default     = "latest"
-}
-
-variable "adds-count" {
-  description = "Number of Virtual Machines"
-  default     = 2
-}
-
-variable "addsvm-nicname" {
-  description = "Naming convention for adds servers."
-  default     = "vmnic-adds-"
-}
-
-variable "adds-staticip" {
-  description = "Starting static IP address for adds servers. First 3 octects."
-  default     = "10.0.4."
-}
-
-variable "adds-availset" {
-  description = "Availability Set name for adds servers."
-  default     = "addsAvailSet"
-}
-
-variable "addsserver-name" {
-  description = "adds server naming convention."
-  default     = "adds"
-}
-
-variable "adds-vmsize" {
-  description = "adds server vm size."
-  default     = "Standard_A2"
-}
-
-variable "addsimage-publisher" {
-  description = "Image publisher."
-  default     = "MicrosoftWindowsServer"
-}
-
-variable "addsimage-offer" {
-  description = "Image offer."
-  default     = "WindowsServer"
-}
-
-variable "addsimage-sku" {
-  description = "Image sku."
-  default     = "2012-R2-Datacenter"
-}
-
-variable "addsimage-version" {
-  description = "Image version."
-  default     = "latest"
-}
-
-variable "mgt-count" {
-  description = "Number of Virtual Machines"
-  default     = 1
-}
-
-variable "mgtvm-nicname" {
-  description = "Naming convention for mgt servers."
-  default     = "vmnic-mgt-"
-}
-
-variable "mgt-staticip" {
-  description = "Starting static IP address for mgt servers."
-  default     = "10.0.0.128"
-}
-
-variable "mgt-availset" {
-  description = "Availability Set name for mgt servers."
-  default     = "mgtAvailSet"
-}
-
-variable "mgtserver-name" {
-  description = "mgt server naming convention."
-  default     = "mgt"
-}
-
-variable "mgt-vmsize" {
-  description = "mgt server vm size."
-  default     = "Standard_A2"
-}
-
-variable "mgtimage-publisher" {
-  description = "Image publisher."
-  default     = "MicrosoftWindowsServer"
-}
-
-variable "mgtimage-offer" {
-  description = "Image offer."
-  default     = "WindowsServer"
-}
-
-variable "mgtimage-sku" {
-  description = "Image sku."
-  default     = "2012-R2-Datacenter"
-}
-
-variable "mgtimage-version" {
-  description = "Image version."
-  default     = "latest"
 }
 
 variable "bastion-ip" {

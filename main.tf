@@ -379,8 +379,8 @@ resource "azurerm_network_security_group" "mgt-nsg" {
 
 # Public subnet nics
 resource "azurerm_network_interface" "public" {
-  count               = "${var.web-count}"
-  name                = "${var.webvm-nicname}${count.index + 1}"
+  count               = "${var.webserver["count"]}"
+  name                = "${var.webserver["nic"]}${count.index + 1}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -390,7 +390,7 @@ resource "azurerm_network_interface" "public" {
     name                                    = "ipconfig${count.index +1}"
     subnet_id                               = "${azurerm_subnet.public.id}"
     private_ip_address_allocation           = "Static"
-    private_ip_address                      = "${var.web-staticip}${count.index + 5}"
+    private_ip_address                      = "${var.webserver["ip"]}${count.index + 5}"
     load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.public.id}"]
   }
 }
@@ -472,7 +472,7 @@ resource "azurerm_lb_probe" "https-public" {
 
 # Web tier availability set.
 resource "azurerm_availability_set" "web" {
-  name                         = "${var.web-availset}"
+  name                         = "${var.webserver["availset"]}"
   location                     = "${azurerm_resource_group.rg.location}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   platform_update_domain_count = "5"
@@ -485,8 +485,8 @@ resource "azurerm_availability_set" "web" {
 
 # Web servers
 resource "azurerm_virtual_machine" "web" {
-  count = "${var.web-count}"
-  name  = "${var.webserver-name}${count.index + 1}"
+  count = "${var.webserver["count"]}"
+  name  = "${var.webserver["name"]}${count.index + 1}"
 
   location = "${azurerm_resource_group.rg.location}"
 
@@ -495,33 +495,33 @@ resource "azurerm_virtual_machine" "web" {
   availability_set_id              = "${azurerm_availability_set.web.id}"
   delete_os_disk_on_termination    = "true"
   delete_data_disks_on_termination = "true"
-  vm_size                          = "${var.web-vmsize}"
+  vm_size                          = "${var.webserver["vmsize"]}"
   depends_on                       = ["azurerm_network_interface.public", "azurerm_lb.public"]
 
   storage_image_reference {
-    publisher = "${var.webimage-publisher}"
-    offer     = "${var.webimage-offer}"
-    sku       = "${var.webimage-sku}"
-    version   = "${var.webimage-version}"
+    publisher = "${var.webserver["publisher"]}"
+    offer     = "${var.webserver["offer"]}"
+    sku       = "${var.webserver["sku"]}"
+    version   = "${var.webserver["version"]}"
   }
 
   storage_os_disk {
     name          = "osdisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver-name}${count.index + 1}-osdisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver["name"]}${count.index + 1}-osdisk${count.index}.vhd"
     caching       = "ReadWrite"
     create_option = "FromImage"
   }
 
   storage_data_disk {
     name          = "datadisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver-name}${count.index + 1}-datadisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
     disk_size_gb  = "${var.datadisk-size}"
     create_option = "Empty"
     lun           = 0
   }
 
   os_profile {
-    computer_name  = "${var.webserver-name}${count.index + 1}"
+    computer_name  = "${var.webserver["name"]}${count.index + 1}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
@@ -539,8 +539,8 @@ resource "azurerm_virtual_machine" "web" {
 # VMs for App subnet
 # App subnet nics
 resource "azurerm_network_interface" "app" {
-  count               = "${var.app-count}"
-  name                = "${var.appvm-nicname}${count.index + 1}"
+  count               = "${var.appserver["count"]}"
+  name                = "${var.appserver["name"]}${count.index + 1}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -550,7 +550,7 @@ resource "azurerm_network_interface" "app" {
     name                                    = "ipconfig${count.index +1}"
     subnet_id                               = "${azurerm_subnet.app.id}"
     private_ip_address_allocation           = "Static"
-    private_ip_address                      = "${var.app-staticip}${count.index + 5}"
+    private_ip_address                      = "${var.appserver["ip"]}${count.index + 5}"
     load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.app.id}"]
   }
 }
@@ -625,7 +625,7 @@ resource "azurerm_lb_probe" "https-app" {
 
 # App tier Availability Set
 resource "azurerm_availability_set" "app" {
-  name                         = "${var.app-availset}"
+  name                         = "${var.appserver["availset"]}"
   location                     = "${azurerm_resource_group.rg.location}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   platform_update_domain_count = "5"
@@ -638,8 +638,8 @@ resource "azurerm_availability_set" "app" {
 
 # App servers
 resource "azurerm_virtual_machine" "app" {
-  count = "${var.app-count}"
-  name  = "${var.appserver-name}${count.index + 1}"
+  count = "${var.appserver["count"]}"
+  name  = "${var.appserver["name"]}${count.index + 1}"
 
   location = "${azurerm_resource_group.rg.location}"
 
@@ -648,33 +648,33 @@ resource "azurerm_virtual_machine" "app" {
   availability_set_id              = "${azurerm_availability_set.app.id}"
   delete_os_disk_on_termination    = "true"
   delete_data_disks_on_termination = "true"
-  vm_size                          = "${var.app-vmsize}"
+  vm_size                          = "${var.appserver["vmsize"]}"
   depends_on                       = ["azurerm_network_interface.app", "azurerm_lb.app"]
 
   storage_image_reference {
-    publisher = "${var.appimage-publisher}"
-    offer     = "${var.appimage-offer}"
-    sku       = "${var.appimage-sku}"
-    version   = "${var.appimage-version}"
+    publisher = "${var.appserver["publisher"]}"
+    offer     = "${var.appserver["offer"]}"
+    sku       = "${var.appserver["sku"]}"
+    version   = "${var.appserver["version"]}"
   }
 
   storage_os_disk {
     name          = "osdisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.appserver-name}${count.index + 1}-osdisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.appserver["name"]}${count.index + 1}-osdisk${count.index}.vhd"
     caching       = "ReadWrite"
     create_option = "FromImage"
   }
 
   storage_data_disk {
     name          = "datadisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.appserver-name}${count.index + 1}-datadisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.appserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
     disk_size_gb  = "${var.datadisk-size}"
     create_option = "Empty"
     lun           = 0
   }
 
   os_profile {
-    computer_name  = "${var.appserver-name}${count.index + 1}"
+    computer_name  = "${var.appserver["name"]}${count.index + 1}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
@@ -693,8 +693,8 @@ resource "azurerm_virtual_machine" "app" {
 # Data subnet nics.
 
 resource "azurerm_network_interface" "data" {
-  count               = "${var.data-count}"
-  name                = "${var.datavm-nicname}${count.index + 1}"
+  count               = "${var.dataserver["count"]}"
+  name                = "${var.dataserver["nic"]}${count.index + 1}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -704,13 +704,13 @@ resource "azurerm_network_interface" "data" {
     name                          = "ipconfig${count.index +1}"
     subnet_id                     = "${azurerm_subnet.data.id}"
     private_ip_address_allocation = "Static"
-    private_ip_address            = "${var.data-staticip}${count.index + 5}"
+    private_ip_address            = "${var.dataserver["ip"]}${count.index + 5}"
   }
 }
 
 # Data tier availability set
 resource "azurerm_availability_set" "data" {
-  name                         = "${var.data-availset}"
+  name                         = "${var.dataserver["availset"]}"
   location                     = "${azurerm_resource_group.rg.location}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   platform_update_domain_count = "5"
@@ -723,8 +723,8 @@ resource "azurerm_availability_set" "data" {
 
 # Database servers
 resource "azurerm_virtual_machine" "data" {
-  count = "${var.data-count}"
-  name  = "${var.dataserver-name}${count.index + 1}"
+  count = "${var.dataserver["count"]}"
+  name  = "${var.dataserver["name"]}${count.index + 1}"
 
   location = "${azurerm_resource_group.rg.location}"
 
@@ -733,33 +733,33 @@ resource "azurerm_virtual_machine" "data" {
   availability_set_id              = "${azurerm_availability_set.data.id}"
   delete_os_disk_on_termination    = "true"
   delete_data_disks_on_termination = "true"
-  vm_size                          = "${var.data-vmsize}"
+  vm_size                          = "${var.dataserver["vmsize"]}"
   depends_on                       = ["azurerm_network_interface.data"]
 
   storage_image_reference {
-    publisher = "${var.dataimage-publisher}"
-    offer     = "${var.dataimage-offer}"
-    sku       = "${var.dataimage-sku}"
-    version   = "${var.dataimage-version}"
+    publisher = "${var.dataserver["publisher"]}"
+    offer     = "${var.dataserver["offer"]}"
+    sku       = "${var.dataserver["sku"]}"
+    version   = "${var.dataserver["version"]}"
   }
 
   storage_os_disk {
     name          = "osdisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.dataserver-name}${count.index + 1}-osdisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.dataserver["name"]}${count.index + 1}-osdisk${count.index}.vhd"
     caching       = "ReadWrite"
     create_option = "FromImage"
   }
 
   storage_data_disk {
     name          = "datadisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.dataserver-name}${count.index + 1}-datadisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.dataserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
     disk_size_gb  = "${var.datadisk-size}"
     create_option = "Empty"
     lun           = 0
   }
 
   os_profile {
-    computer_name  = "${var.dataserver-name}${count.index + 1}"
+    computer_name  = "${var.dataserver["name"]}${count.index + 1}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
@@ -778,8 +778,8 @@ resource "azurerm_virtual_machine" "data" {
 # ADDS subnet nics.
 
 resource "azurerm_network_interface" "adds" {
-  count               = "${var.adds-count}"
-  name                = "${var.addsvm-nicname}${count.index + 1}"
+  count               = "${var.addsserver["count"]}"
+  name                = "${var.addsserver["nic"]}${count.index + 1}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -789,13 +789,13 @@ resource "azurerm_network_interface" "adds" {
     name                          = "ipconfig${count.index +1}"
     subnet_id                     = "${azurerm_subnet.adds.id}"
     private_ip_address_allocation = "Static"
-    private_ip_address            = "${var.adds-staticip}${count.index + 5}"
+    private_ip_address            = "${var.addsserver["ip"]}${count.index + 5}"
   }
 }
 
 # ADDS Availability Set
 resource "azurerm_availability_set" "adds" {
-  name                         = "${var.adds-availset}"
+  name                         = "${var.addsserver["availset"]}"
   location                     = "${azurerm_resource_group.rg.location}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   platform_update_domain_count = "5"
@@ -808,8 +808,8 @@ resource "azurerm_availability_set" "adds" {
 
 # Domain Controllers
 resource "azurerm_virtual_machine" "adds" {
-  count = "${var.adds-count}"
-  name  = "${var.addsserver-name}${count.index + 1}"
+  count = "${var.addsserver["count"]}"
+  name  = "${var.addsserver["name"]}${count.index + 1}"
 
   location = "${azurerm_resource_group.rg.location}"
 
@@ -818,33 +818,33 @@ resource "azurerm_virtual_machine" "adds" {
   availability_set_id              = "${azurerm_availability_set.adds.id}"
   delete_os_disk_on_termination    = "true"
   delete_data_disks_on_termination = "true"
-  vm_size                          = "${var.adds-vmsize}"
+  vm_size                          = "${var.addsserver["vmsize"]}"
   depends_on                       = ["azurerm_network_interface.adds"]
 
   storage_image_reference {
-    publisher = "${var.addsimage-publisher}"
-    offer     = "${var.addsimage-offer}"
-    sku       = "${var.addsimage-sku}"
-    version   = "${var.addsimage-version}"
+    publisher = "${var.addsserver["publisher"]}"
+    offer     = "${var.addsserver["offer"]}"
+    sku       = "${var.addsserver["sku"]}"
+    version   = "${var.addsserver["version"]}"
   }
 
   storage_os_disk {
     name          = "osdisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.addsserver-name}${count.index + 1}-osdisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.addsserver["name"]}${count.index + 1}-osdisk${count.index}.vhd"
     caching       = "ReadWrite"
     create_option = "FromImage"
   }
 
   storage_data_disk {
     name          = "datadisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.addsserver-name}${count.index + 1}-datadisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.addsserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
     disk_size_gb  = "${var.datadisk-size}"
     create_option = "Empty"
     lun           = 0
   }
 
   os_profile {
-    computer_name  = "${var.addsserver-name}${count.index + 1}"
+    computer_name  = "${var.addsserver["name"]}${count.index + 1}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
@@ -862,8 +862,8 @@ resource "azurerm_virtual_machine" "adds" {
 # VMs for Management subnet
 # Management subnet nics.
 resource "azurerm_network_interface" "mgt" {
-  count               = "${var.mgt-count}"
-  name                = "${var.mgtvm-nicname}${count.index + 1}"
+  count               = "${var.mgtserver["count"]}"
+  name                = "${var.mgtserver["nic"]}${count.index + 1}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -887,7 +887,7 @@ resource "azurerm_public_ip" "PublicIP" {
 # Management Availability Set
 # ADDS Availability Set
 resource "azurerm_availability_set" "mgt" {
-  name                         = "${var.mgt-availset}"
+  name                         = "${var.mgtserver["availset"]}"
   location                     = "${azurerm_resource_group.rg.location}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   platform_update_domain_count = "5"
@@ -900,8 +900,8 @@ resource "azurerm_availability_set" "mgt" {
 
 # Bastion hosts
 resource "azurerm_virtual_machine" "mgt" {
-  count = "${var.mgt-count}"
-  name  = "${var.mgtserver-name}${count.index + 1}"
+  count = "${var.mgtserver["count"]}"
+  name  = "${var.mgtserver["name"]}${count.index + 1}"
 
   location = "${azurerm_resource_group.rg.location}"
 
@@ -909,33 +909,33 @@ resource "azurerm_virtual_machine" "mgt" {
   network_interface_ids            = ["${element(azurerm_network_interface.mgt.*.id, count.index)}"]
   delete_os_disk_on_termination    = "true"
   delete_data_disks_on_termination = "true"
-  vm_size                          = "${var.mgt-vmsize}"
+  vm_size                          = "${var.mgtserver["vmsize"]}"
   depends_on                       = ["azurerm_network_interface.mgt"]
 
   storage_image_reference {
-    publisher = "${var.mgtimage-publisher}"
-    offer     = "${var.mgtimage-offer}"
-    sku       = "${var.mgtimage-sku}"
-    version   = "${var.mgtimage-version}"
+    publisher = "${var.mgtserver["publisher"]}"
+    offer     = "${var.mgtserver["offer"]}"
+    sku       = "${var.mgtserver["sku"]}"
+    version   = "${var.mgtserver["version"]}"
   }
 
   storage_os_disk {
     name          = "osdisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.mgtserver-name}${count.index + 1}-osdisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.mgtserver["name"]}${count.index + 1}-osdisk${count.index}.vhd"
     caching       = "ReadWrite"
     create_option = "FromImage"
   }
 
   storage_data_disk {
     name          = "datadisk${count.index}"
-    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.mgtserver-name}${count.index + 1}-datadisk${count.index}.vhd"
+    vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.mgtserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
     disk_size_gb  = "${var.datadisk-size}"
     create_option = "Empty"
     lun           = 0
   }
 
   os_profile {
-    computer_name  = "${var.mgtserver-name}${count.index + 1}"
+    computer_name  = "${var.mgtserver["name"]}${count.index + 1}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
