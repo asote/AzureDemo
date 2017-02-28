@@ -513,6 +513,7 @@ resource "azurerm_virtual_machine" "web" {
   }
 
   storage_data_disk {
+    count         = "${var.webserver["datadisk"] == "yes" ? var.webserver["count"] :0}"
     name          = "datadisk${count.index}"
     vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
     disk_size_gb  = "${var.webserver["datadisksize"]}"

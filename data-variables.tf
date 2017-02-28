@@ -105,6 +105,7 @@ variable "webserver" {
     offer        = "WindowsServer"
     sku          = "2012-R2-Datacenter"
     version      = "latest"
+    datadisk     = "yes"
     datadisksize = "50"
   }
 }
