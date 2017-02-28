@@ -56,54 +56,28 @@ variable "subnet" {
   }
 }
 
-variable "public-subnet" {
-  description = "Public subnet name"
-  default     = "web-tier"
+variable "subnetname" {
+  description = "Subnet names."
+
+  default = {
+    web  = "web-tier"
+    app  = "app-tier"
+    data = "data-tier"
+    adds = "adds-tier"
+    mgt  = "mgt-tier"
+  }
 }
 
-variable "public-nsg" {
-  description = "Network Security Group for public subnet."
-  default     = "web-tier-nsg"
-}
+variable "nsgname" {
+  description = "Network Security Group names."
 
-variable "mgt-subnet" {
-  description = "Management subnet name."
-  default     = "mgt-tier"
-}
-
-variable "mgt-nsg" {
-  description = "Network Security Group for mgt subnet."
-  default     = "mgt-tier-nsg"
-}
-
-variable "app-subnet" {
-  description = "App subnet name."
-  default     = "app-tier"
-}
-
-variable "app-nsg" {
-  description = "Network Security Group for app subnet."
-  default     = "app-tier-nsg"
-}
-
-variable "data-subnet" {
-  description = "Data subnet name."
-  default     = "data-tier"
-}
-
-variable "data-nsg" {
-  description = "Network Security Group for data subnet."
-  default     = "data-tier-nsg"
-}
-
-variable "adds-subnet" {
-  description = "Active Directory subnet name."
-  default     = "adds-tier"
-}
-
-variable "adds-nsg" {
-  description = "Network Security Group for ADDS subnet."
-  default     = "adds-tier-nsg"
+  default = {
+    web  = "web-tier-nsg"
+    app  = "app-tier-nsg"
+    data = "data-tier-nsg"
+    adds = "adds-tier-nsg"
+    mgt  = "mgt-tier-nsg"
+  }
 }
 
 variable "web-count" {

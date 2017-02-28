@@ -46,7 +46,7 @@ resource "azurerm_virtual_network" "vnet" {
 
 # Public subnet
 resource "azurerm_subnet" "public" {
-  name                      = "${var.public-subnet}"
+  name                      = "${var.subnetname["web"]}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
   address_prefix            = "${var.subnet["web"]}"
@@ -55,7 +55,7 @@ resource "azurerm_subnet" "public" {
 
 # Public subnet NSG
 resource "azurerm_network_security_group" "public-nsg" {
-  name                = "${var.public-nsg}"
+  name                = "${var.nsgname["web"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -110,7 +110,7 @@ resource "azurerm_network_security_group" "public-nsg" {
 
 # App subnet
 resource "azurerm_subnet" "app" {
-  name                      = "${var.app-subnet}"
+  name                      = "${var.subnetname["app"]}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
   address_prefix            = "${var.subnet["app"]}"
@@ -119,7 +119,7 @@ resource "azurerm_subnet" "app" {
 
 # App subnet NSG
 resource "azurerm_network_security_group" "app-nsg" {
-  name                = "${var.app-nsg}"
+  name                = "${var.nsgname["app"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -175,7 +175,7 @@ resource "azurerm_network_security_group" "app-nsg" {
 # Data subnet
 
 resource "azurerm_subnet" "data" {
-  name                      = "${var.data-subnet}"
+  name                      = "${var.subnetname["data"]}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
   address_prefix            = "${var.subnet["data"]}"
@@ -188,7 +188,7 @@ resource "azurerm_subnet" "data" {
 # Allow SQL and RDP.  Deny HTTP from tier1,tier2 and Internet 
 
 resource "azurerm_network_security_group" "data-nsg" {
-  name                = "${var.data-nsg}"
+  name                = "${var.nsgname["data"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -292,7 +292,7 @@ resource "azurerm_network_security_group" "data-nsg" {
 # Active Directory subnet
 
 resource "azurerm_subnet" "adds" {
-  name                      = "${var.adds-subnet}"
+  name                      = "${var.subnetname["adds"]}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
   address_prefix            = "${var.subnet["adds"]}"
@@ -302,7 +302,7 @@ resource "azurerm_subnet" "adds" {
 # Active Directory NSG
 
 resource "azurerm_network_security_group" "adds-nsg" {
-  name                = "${var.adds-nsg}"
+  name                = "${var.nsgname["adds"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -346,7 +346,7 @@ resource "azurerm_network_security_group" "adds-nsg" {
 # Management subnet
 
 resource "azurerm_subnet" "mgt" {
-  name                      = "${var.mgt-subnet}"
+  name                      = "${var.subnetname["mgt"]}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.vnet.name}"
   address_prefix            = "${var.subnet["mgt"]}"
@@ -356,7 +356,7 @@ resource "azurerm_subnet" "mgt" {
 # Management subnet NSG
 
 resource "azurerm_network_security_group" "mgt-nsg" {
-  name                = "${var.mgt-nsg}"
+  name                = "${var.nsgname["mgt"]}"
   location            = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
 
