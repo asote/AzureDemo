@@ -390,7 +390,7 @@ resource "azurerm_network_interface" "public" {
     name                                    = "ipconfig${count.index +1}"
     subnet_id                               = "${azurerm_subnet.public.id}"
     private_ip_address_allocation           = "Static"
-    private_ip_address                      = "${cidrhost(var.webserver["cidr"], 5)}"
+    private_ip_address                      = "${cidrhost(var.subnet["web"], count.index + 5)}"
     load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.public.id}"]
   }
 }
@@ -486,7 +486,7 @@ resource "azurerm_availability_set" "web" {
 # Web servers
 resource "azurerm_virtual_machine" "web" {
   count = "${var.webserver["count"]}"
-  name  = "${var.webserver["name"]}${count.index + 1}"
+  name  = "${var.webserver["name"]}${format("%02d", count.index + 1)}"
 
   location = "${azurerm_resource_group.rg.location}"
 
@@ -550,7 +550,7 @@ resource "azurerm_network_interface" "app" {
     name                                    = "ipconfig${count.index +1}"
     subnet_id                               = "${azurerm_subnet.app.id}"
     private_ip_address_allocation           = "Static"
-    private_ip_address                      = "${cidrhost(var.appserver["cidr"], 5)}"
+    private_ip_address                      = "${cidrhost(var.subnet["app"], count.index + 5)}"
     load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.app.id}"]
   }
 }
@@ -639,7 +639,7 @@ resource "azurerm_availability_set" "app" {
 # App servers
 resource "azurerm_virtual_machine" "app" {
   count = "${var.appserver["count"]}"
-  name  = "${var.appserver["name"]}${count.index + 1}"
+  name  = "${var.appserver["name"]}${format("%02d", count.index + 1)}"
 
   location = "${azurerm_resource_group.rg.location}"
 
@@ -704,7 +704,7 @@ resource "azurerm_network_interface" "data" {
     name                          = "ipconfig${count.index +1}"
     subnet_id                     = "${azurerm_subnet.data.id}"
     private_ip_address_allocation = "Static"
-    private_ip_address            = "${cidrhost(var.dataserver["cidr"], 5)}"
+    private_ip_address            = "${cidrhost(var.subnet["data"], count.index + 5)}"
   }
 }
 
@@ -724,7 +724,7 @@ resource "azurerm_availability_set" "data" {
 # Database servers
 resource "azurerm_virtual_machine" "data" {
   count = "${var.dataserver["count"]}"
-  name  = "${var.dataserver["name"]}${count.index + 1}"
+  name  = "${var.dataserver["name"]}${format("%02d", count.index + 1)}"
 
   location = "${azurerm_resource_group.rg.location}"
 
@@ -789,7 +789,7 @@ resource "azurerm_network_interface" "adds" {
     name                          = "ipconfig${count.index +1}"
     subnet_id                     = "${azurerm_subnet.adds.id}"
     private_ip_address_allocation = "Static"
-    private_ip_address            = "${cidrhost(var.addsserver["cidr"], 5)}"
+    private_ip_address            = "${cidrhost(var.subnet["adds"], count.index + 5)}"
   }
 }
 
@@ -809,7 +809,7 @@ resource "azurerm_availability_set" "adds" {
 # Domain Controllers
 resource "azurerm_virtual_machine" "adds" {
   count = "${var.addsserver["count"]}"
-  name  = "${var.addsserver["name"]}${count.index + 1}"
+  name  = "${var.addsserver["name"]}${format("%02d", count.index + 1)}"
 
   location = "${azurerm_resource_group.rg.location}"
 
@@ -873,7 +873,7 @@ resource "azurerm_network_interface" "mgt" {
     name                          = "ipconfig${count.index +1}"
     subnet_id                     = "${azurerm_subnet.mgt.id}"
     private_ip_address_allocation = "Static"
-    private_ip_address            = "${cidrhost(var.mgtserver["cidr"], 5)}"
+    private_ip_address            = "${cidrhost(var.subnet["mgt"], count.index + 5)}"
     public_ip_address_id          = "${azurerm_public_ip.PublicIP.id}"
   }
 }
@@ -902,7 +902,7 @@ resource "azurerm_availability_set" "mgt" {
 # Bastion hosts
 resource "azurerm_virtual_machine" "mgt" {
   count = "${var.mgtserver["count"]}"
-  name  = "${var.mgtserver["name"]}${count.index + 1}"
+  name  = "${var.mgtserver["name"]}${format("%02d", count.index + 1)}"
 
   location = "${azurerm_resource_group.rg.location}"
 

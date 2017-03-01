@@ -97,7 +97,6 @@ variable "webserver" {
   default = {
     count        = 2
     nic          = "vmnic-web-"
-    cidr         = "10.0.1.0/24"
     vmsize       = "Standard_A2"
     availset     = "WebAvailSet"
     name         = "web"
@@ -105,7 +104,7 @@ variable "webserver" {
     offer        = "WindowsServer"
     sku          = "2012-R2-Datacenter"
     version      = "latest"
-    datadisksize = "0"
+    datadisksize = "50"
   }
 }
 
@@ -115,7 +114,6 @@ variable "appserver" {
   default = {
     count        = 2
     nic          = "vmnic-app-"
-    cidr         = "10.0.2.0/24"
     vmsize       = "Standard_A2"
     availset     = "AppAvailSet"
     name         = "app"
@@ -133,7 +131,6 @@ variable "dataserver" {
   default = {
     count        = 2
     nic          = "vmnic-data-"
-    cidr         = "10.0.3.0/24"
     vmsize       = "Standard_A2"
     availset     = "DataAvailSet"
     name         = "data"
@@ -151,7 +148,6 @@ variable "addsserver" {
   default = {
     count        = 2
     nic          = "vmnic-adds-"
-    cidr         = "10.0.4.0/24"
     vmsize       = "Standard_A2"
     availset     = "ADDSAvailSet"
     name         = "adds"
@@ -169,9 +165,8 @@ variable "mgtserver" {
   default = {
     count        = 1
     nic          = "vmnic-mgt-"
-    cidr         = "10.0.0.128/25"
     vmsize       = "Standard_A2"
-    availset     = "MGTSAvailSet"
+    availset     = "MgtAvailSet"
     name         = "mgt"
     publisher    = "MicrosoftWindowsServer"
     offer        = "WindowsServer"
@@ -186,6 +181,6 @@ variable "admin" {
 
   default = {
     user = "rabbit"
-    pwd  = "abc123"
+    pwd  = "U7$dHa3*fK3"
   }
 }
