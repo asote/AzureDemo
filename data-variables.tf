@@ -97,7 +97,7 @@ variable "webserver" {
   default = {
     count        = 2
     nic          = "vmnic-web-"
-    ip           = "10.0.1."                # Starting static IP address for web servers. First 3 octects
+    cidr         = "10.0.1.0/24"
     vmsize       = "Standard_A2"
     availset     = "WebAvailSet"
     name         = "web"
@@ -105,8 +105,7 @@ variable "webserver" {
     offer        = "WindowsServer"
     sku          = "2012-R2-Datacenter"
     version      = "latest"
-    datadisk     = "yes"
-    datadisksize = "50"
+    datadisksize = "0"
   }
 }
 
@@ -116,7 +115,7 @@ variable "appserver" {
   default = {
     count        = 2
     nic          = "vmnic-app-"
-    ip           = "10.0.2."                # Starting static IP address for web servers. First 3 octects
+    cidr         = "10.0.2.0/24"
     vmsize       = "Standard_A2"
     availset     = "AppAvailSet"
     name         = "app"
@@ -134,7 +133,7 @@ variable "dataserver" {
   default = {
     count        = 2
     nic          = "vmnic-data-"
-    ip           = "10.0.3."                # Starting static IP address for web servers. First 3 octects
+    cidr         = "10.0.3.0/24"
     vmsize       = "Standard_A2"
     availset     = "DataAvailSet"
     name         = "data"
@@ -152,7 +151,7 @@ variable "addsserver" {
   default = {
     count        = 2
     nic          = "vmnic-adds-"
-    ip           = "10.0.4."                # Starting static IP address for web servers. First 3 octects
+    cidr         = "10.0.4.0/24"
     vmsize       = "Standard_A2"
     availset     = "ADDSAvailSet"
     name         = "adds"
@@ -170,7 +169,7 @@ variable "mgtserver" {
   default = {
     count        = 1
     nic          = "vmnic-mgt-"
-    ip           = "10.0.0.128"
+    cidr         = "10.0.0.128/25"
     vmsize       = "Standard_A2"
     availset     = "MGTSAvailSet"
     name         = "mgt"

@@ -390,7 +390,7 @@ resource "azurerm_network_interface" "public" {
     name                                    = "ipconfig${count.index +1}"
     subnet_id                               = "${azurerm_subnet.public.id}"
     private_ip_address_allocation           = "Static"
-    private_ip_address                      = "${var.webserver["ip"]}${count.index + 5}"
+    private_ip_address                      = "${cidrhost(var.webserver["cidr"], 5)}"
     load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.public.id}"]
   }
 }
@@ -513,7 +513,6 @@ resource "azurerm_virtual_machine" "web" {
   }
 
   storage_data_disk {
-    #count         = "${var.webserver["datadisk"] == "yes" ? var.webserver["count"] :0}"
     name          = "datadisk${count.index}"
     vhd_uri       = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.blob.name}/${var.webserver["name"]}${count.index + 1}-datadisk${count.index}.vhd"
     disk_size_gb  = "${var.webserver["datadisksize"]}"
@@ -551,7 +550,7 @@ resource "azurerm_network_interface" "app" {
     name                                    = "ipconfig${count.index +1}"
     subnet_id                               = "${azurerm_subnet.app.id}"
     private_ip_address_allocation           = "Static"
-    private_ip_address                      = "${var.appserver["ip"]}${count.index + 5}"
+    private_ip_address                      = "${cidrhost(var.appserver["cidr"], 5)}"
     load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.app.id}"]
   }
 }
@@ -705,7 +704,7 @@ resource "azurerm_network_interface" "data" {
     name                          = "ipconfig${count.index +1}"
     subnet_id                     = "${azurerm_subnet.data.id}"
     private_ip_address_allocation = "Static"
-    private_ip_address            = "${var.dataserver["ip"]}${count.index + 5}"
+    private_ip_address            = "${cidrhost(var.dataserver["cidr"], 5)}"
   }
 }
 
@@ -790,7 +789,7 @@ resource "azurerm_network_interface" "adds" {
     name                          = "ipconfig${count.index +1}"
     subnet_id                     = "${azurerm_subnet.adds.id}"
     private_ip_address_allocation = "Static"
-    private_ip_address            = "${var.addsserver["ip"]}${count.index + 5}"
+    private_ip_address            = "${cidrhost(var.addsserver["cidr"], 5)}"
   }
 }
 
@@ -873,7 +872,8 @@ resource "azurerm_network_interface" "mgt" {
   ip_configuration {
     name                          = "ipconfig${count.index +1}"
     subnet_id                     = "${azurerm_subnet.mgt.id}"
-    private_ip_address_allocation = "dynamic"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "${cidrhost(var.mgtserver["cidr"], 5)}"
     public_ip_address_id          = "${azurerm_public_ip.PublicIP.id}"
   }
 }
